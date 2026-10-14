@@ -1,0 +1,2833 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#100d24">
+    <meta name="description" content="Alex Morgan — developer, pixel enthusiast, and builder of thoughtful digital worlds.">
+    <title>Alex Morgan — Developer Portfolio</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --night: #100d24;
+            --panel: #191431;
+            --panel-2: #211a3b;
+            --line: #594675;
+            --ink: #f8edce;
+            --muted: #aaa0c7;
+            --gold: #ffd66e;
+            --mint: #81f2c0;
+            --coral: #ff7e8a;
+            --blue: #83caff;
+            --pixel: "Courier New", Courier, monospace;
+            --header-h: 76px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: calc(var(--header-h) + 22px);
+        }
+
+        body {
+            margin: 0;
+            min-width: 320px;
+            overflow-x: hidden;
+            background: var(--night);
+            color: var(--ink);
+            font-family: var(--pixel);
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        button, a {
+            color: inherit;
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--mint);
+            outline-offset: 4px;
+        }
+
+        #magic-bg {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: .56;
+        }
+
+        .crt {
+            position: fixed;
+            inset: 0;
+            z-index: 80;
+            pointer-events: none;
+            opacity: .14;
+            mix-blend-mode: multiply;
+            background: repeating-linear-gradient(to bottom, transparent 0 2px, rgba(2,0,14,.38) 3px 4px);
+        }
+
+            .crt::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(ellipse at center,transparent 48%,rgba(0,0,0,.46) 100%);
+            }
+
+            .crt::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                opacity: .14;
+                background: repeating-linear-gradient(90deg,rgba(255,0,80,.11) 0 1px,rgba(0,255,200,.08) 1px 2px,transparent 2px 4px);
+            }
+
+        .shell {
+            width: min(1120px, calc(100% - 48px));
+            margin-inline: auto;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            min-height: var(--header-h);
+            border-bottom: 1px solid rgba(169,160,200,.23);
+            background: rgba(16,13,36,.94);
+            backdrop-filter: blur(14px);
+        }
+
+        .topbar-inner {
+            width: min(1180px, calc(100% - 40px));
+            min-height: var(--header-h);
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 0 0 auto;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+        }
+
+        .brand-mark {
+            width: 31px;
+            height: 31px;
+            display: grid;
+            place-items: center;
+            transform: rotate(45deg);
+            color: var(--night);
+            background: var(--gold);
+            box-shadow: 4px 4px 0 #8a5a80;
+        }
+
+            .brand-mark span {
+                transform: rotate(-45deg);
+                font-size: 17px;
+            }
+
+        .brand-name em {
+            display: block;
+            color: var(--muted);
+            font-size: 8px;
+            font-style: normal;
+            font-weight: 400;
+            letter-spacing: .18em;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: clamp(13px,2.2vw,30px);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: clamp(14px,2.3vw,31px);
+        }
+
+            .nav-links a {
+                color: var(--muted);
+                font-size: 9px;
+                letter-spacing: .13em;
+                text-transform: uppercase;
+                transition: color .2s;
+            }
+
+                .nav-links a:hover {
+                    color: var(--gold);
+                }
+
+        .health {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 160px;
+        }
+
+        .health-label {
+            color: var(--coral);
+            font-size: 8px;
+            font-weight: bold;
+            letter-spacing: .1em;
+        }
+
+        .health-track {
+            position: relative;
+            width: 100px;
+            height: 14px;
+            padding: 2px;
+            border: 2px solid #9a7f9c;
+            background: #231a36;
+            box-shadow: 2px 2px 0 #080612;
+            image-rendering: pixelated;
+        }
+
+        .health-fill {
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(90deg,#ff7480 0 6px,#e85578 6px 8px);
+            box-shadow: inset 0 2px rgba(255,255,255,.26);
+            transition: width .22s steps(8,end);
+        }
+
+        .hp-number {
+            min-width: 30px;
+            color: var(--ink);
+            font-size: 8px;
+            text-align: right;
+        }
+
+        .hp-heart, .hp-skull {
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            width: 19px;
+            height: 19px;
+            transform: translate(-50%,-50%);
+            image-rendering: pixelated;
+            transition: left .22s steps(8,end),opacity .14s,transform .25s cubic-bezier(.18,.89,.32,1.7),filter .25s;
+        }
+
+            .hp-heart svg, .hp-skull svg {
+                display: block;
+                width: 100%;
+                height: 100%;
+                shape-rendering: crispEdges;
+            }
+
+        .hp-skull {
+            opacity: 0;
+            transform: translate(-50%,-50%) scale(.35);
+        }
+
+        body.dead-health .hp-heart {
+            opacity: 0;
+            transform: translate(-50%,-50%) scale(.35);
+        }
+
+        body.dead-health .hp-skull {
+            opacity: 1;
+            transform: translate(-50%,-58%) scale(1.08);
+            filter: drop-shadow(0 0 6px var(--coral));
+            animation: skull-pop .42s steps(3,end);
+        }
+
+        .nav-links a[aria-current="location"] {
+            color: var(--gold);
+            text-shadow: 0 0 9px rgba(255,214,110,.38);
+        }
+
+        @keyframes skull-pop {
+            0% {
+                transform: translate(-50%,-50%) scale(0)
+            }
+
+            60% {
+                transform: translate(-50%,-68%) scale(1.35)
+            }
+
+            100% {
+                transform: translate(-50%,-58%) scale(1.15)
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+            width: 39px;
+            height: 37px;
+            padding: 8px;
+            border: 1px solid var(--line);
+            background: #211a3b;
+        }
+
+            .menu-toggle span {
+                display: block;
+                height: 2px;
+                margin: 4px 0;
+                background: var(--gold);
+                transition: transform .2s,opacity .2s;
+            }
+
+            .menu-toggle[aria-expanded="true"] span:first-child {
+                transform: translateY(6px) rotate(45deg);
+            }
+
+            .menu-toggle[aria-expanded="true"] span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .menu-toggle[aria-expanded="true"] span:last-child {
+                transform: translateY(-6px) rotate(-45deg);
+            }
+
+        main {
+            position: relative;
+            z-index: 1;
+        }
+
+        .intro {
+            min-height: 650px;
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            align-items: center;
+            gap: 45px;
+            padding-top: 70px;
+            padding-bottom: 86px;
+            position: relative;
+        }
+
+            .intro::before {
+                content: "";
+                position: absolute;
+                z-index: -1;
+                left: 4%;
+                top: 13%;
+                width: 330px;
+                height: 330px;
+                border-radius: 50%;
+                background: #563c94;
+                filter: blur(115px);
+                opacity: .25;
+            }
+
+        .kicker {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--mint);
+            font-size: 9px;
+            font-weight: bold;
+            letter-spacing: .21em;
+            text-transform: uppercase;
+        }
+
+            .kicker::before {
+                content: "";
+                width: 22px;
+                height: 3px;
+                background: currentColor;
+                box-shadow: 0 0 10px currentColor;
+            }
+
+        h1 {
+            margin: 23px 0 13px;
+            font-size: clamp(48px,7vw,82px);
+            line-height: .97;
+            letter-spacing: -.075em;
+            text-transform: uppercase;
+            text-shadow: 4px 4px #8a4d84,7px 7px rgba(20,10,42,.75);
+        }
+
+            h1 span {
+                display: block;
+                color: var(--gold);
+                font-size: .54em;
+                line-height: 1.45;
+                letter-spacing: .11em;
+                text-shadow: 3px 3px #875777;
+            }
+
+        .intro-copy > p {
+            max-width: 570px;
+            color: #c3bbd9;
+            font-size: 12px;
+            line-height: 2;
+        }
+
+            .intro-copy > p strong {
+                color: var(--ink);
+            }
+
+        .intro-actions {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 21px;
+            margin-top: 27px;
+        }
+
+        .button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 11px;
+            padding: 13px 17px;
+            border: 0;
+            background: var(--gold);
+            color: #20152e;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            box-shadow: 5px 5px 0 #9e5e7c;
+            transition: transform .15s,box-shadow .15s;
+        }
+
+            .button:hover {
+                transform: translate(2px,2px);
+                box-shadow: 3px 3px 0 #9e5e7c;
+            }
+
+            .button:active {
+                transform: translate(5px,5px);
+                box-shadow: none;
+            }
+
+            .button .arrow {
+                font-size: 15px;
+            }
+
+        .plain-link {
+            color: var(--ink);
+            font-size: 9px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            border-bottom: 1px dashed var(--muted);
+            padding: 6px 0;
+        }
+
+        .status-line {
+            margin-top: 28px;
+            color: #9287aa;
+            font-size: 8px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+
+            .status-line strong {
+                color: var(--mint);
+                font-weight: 400;
+            }
+
+        .portrait-wrap {
+            position: relative;
+            justify-self: center;
+            width: min(100%,390px);
+            padding: 18px;
+            border: 1px solid #695483;
+            background: rgba(25,20,49,.82);
+            box-shadow: 9px 9px 0 rgba(10,7,23,.74),10px 10px 0 #594675;
+        }
+
+        .portrait {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 1.13;
+            border: 1px solid rgba(255,255,255,.16);
+            background: linear-gradient(#201845 0%,#594274 58%,#ca6c7d 100%);
+        }
+
+            .portrait::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);
+                background-size: 22px 22px;
+            }
+
+        .portrait-sun {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            right: 17%;
+            top: 12%;
+            border-radius: 50%;
+            background: linear-gradient(#ffe49c 52%,#e98c99 53%);
+            box-shadow: 0 0 40px rgba(255,215,150,.35);
+        }
+
+        .portrait-hill {
+            position: absolute;
+            left: -6%;
+            right: -6%;
+            bottom: 0;
+            height: 47%;
+            background: #29213d;
+            clip-path: polygon(0 45%,24% 21%,45% 48%,67% 4%,100% 43%,100% 100%,0 100%);
+        }
+
+        .portrait-avatar {
+            position: absolute;
+            left: 50%;
+            bottom: 13%;
+            width: 83px;
+            height: 112px;
+            transform: translateX(-50%);
+            filter: drop-shadow(0 0 9px rgba(255,219,137,.38));
+        }
+
+            .portrait-avatar::before {
+                content: "";
+                position: absolute;
+                left: 21px;
+                top: 0;
+                width: 43px;
+                height: 27px;
+                background: #392843;
+                box-shadow: -8px 10px #392843,8px 12px #392843;
+            }
+
+            .portrait-avatar::after {
+                content: "";
+                position: absolute;
+                left: 28px;
+                top: 24px;
+                width: 31px;
+                height: 32px;
+                background: #e7a47b;
+                box-shadow: 7px 14px #d87b6e;
+            }
+
+            .portrait-avatar i {
+                position: absolute;
+                left: 17px;
+                top: 55px;
+                width: 52px;
+                height: 44px;
+                background: #65cfb6;
+                box-shadow: 0 14px #33486b,-9px 8px #ffd36c,48px 8px #ffd36c;
+            }
+
+            .portrait-avatar b {
+                position: absolute;
+                left: 24px;
+                top: 94px;
+                width: 17px;
+                height: 15px;
+                background: #e7a45d;
+                box-shadow: 26px 0 #e7a45d;
+            }
+
+        .portrait-tag {
+            position: absolute;
+            left: 14px;
+            top: 14px;
+            padding: 5px 8px;
+            border: 1px solid rgba(255,255,255,.25);
+            background: rgba(18,14,35,.55);
+            color: #fff0c3;
+            font-size: 7px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+
+        .portrait-caption {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 2px 0;
+            color: var(--muted);
+            font-size: 8px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+            .portrait-caption strong {
+                color: var(--gold);
+                font-weight: 400;
+            }
+
+        .scroll-hint {
+            position: absolute;
+            left: 50%;
+            bottom: 22px;
+            transform: translateX(-50%);
+            display: grid;
+            justify-items: center;
+            gap: 4px;
+            color: #83799f;
+            font-size: 7px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+            .scroll-hint span {
+                color: var(--gold);
+                font-size: 14px;
+                animation: nudge 1.1s steps(2,end) infinite alternate;
+            }
+
+        @keyframes nudge {
+            to {
+                transform: translateY(4px);
+            }
+        }
+
+        .section {
+            padding: 112px 0 122px;
+            border-top: 1px solid rgba(169,160,200,.18);
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .section-kicker {
+            color: var(--coral);
+            font-size: 8px;
+            letter-spacing: .2em;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            margin: 7px 0 0;
+            font-size: clamp(25px,4vw,38px);
+            line-height: 1.1;
+            letter-spacing: -.06em;
+            text-transform: uppercase;
+        }
+
+        .section-note {
+            max-width: 310px;
+            color: var(--muted);
+            text-align: right;
+            font-size: 9px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3,minmax(0,1fr));
+            gap: 17px;
+        }
+
+        .project-card {
+            min-width: 0;
+            padding: 0;
+            overflow: hidden;
+            border: 1px solid #57476b;
+            background: rgba(25,20,49,.92);
+            text-align: left;
+            transition: transform .22s,border-color .22s,box-shadow .22s;
+        }
+
+            .project-card:hover, .project-card:focus-visible {
+                transform: translateY(-5px);
+                border-color: var(--gold);
+                box-shadow: 5px 6px 0 rgba(255,214,110,.17);
+            }
+
+        .project-thumb {
+            position: relative;
+            display: block;
+            overflow: hidden;
+            aspect-ratio: 1.52;
+            background: #211a3b;
+            border-bottom: 1px solid #57476b;
+        }
+
+            .project-thumb img {
+                display: block;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                filter: grayscale(1) saturate(.25) brightness(.77);
+                transition: filter .34s,transform .5s;
+                image-rendering: auto;
+            }
+
+        .project-card:hover .project-thumb img, .project-card:focus-visible .project-thumb img {
+            filter: grayscale(0) saturate(1) brightness(1);
+            transform: scale(1.035);
+        }
+
+        .project-open {
+            position: absolute;
+            right: 11px;
+            bottom: 10px;
+            padding: 5px 8px;
+            background: rgba(16,13,36,.83);
+            border: 1px solid rgba(255,255,255,.22);
+            color: var(--gold);
+            font-size: 7px;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity .2s,transform .2s;
+        }
+
+        .project-card:hover .project-open, .project-card:focus-visible .project-open {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .project-info {
+            display: block;
+            padding: 15px 16px 17px;
+        }
+
+        .project-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            color: var(--mint);
+            font-size: 7px;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+        }
+
+            .project-meta span:last-child {
+                color: #857b9d;
+            }
+
+        .project-title {
+            display: block;
+            margin: 8px 0 5px;
+            font-size: 15px;
+            letter-spacing: .01em;
+        }
+
+        .project-blurb {
+            display: block;
+            min-height: 38px;
+            color: var(--muted);
+            font-size: 9px;
+            line-height: 1.8;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 13px;
+        }
+
+        .tag {
+            padding: 3px 6px;
+            border: 1px solid #4a3c61;
+            color: #c7bbdb;
+            font-size: 7px;
+            letter-spacing: .04em;
+        }
+
+        .skills-section {
+            padding-bottom: 100px;
+        }
+
+        .skills-intro {
+            max-width: 650px;
+            margin: 12px 0 27px;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.9;
+        }
+
+        .skill-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 0 14px;
+            color: #a79abb;
+            font-size: 8px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        .keycap {
+            display: inline-grid;
+            place-items: center;
+            min-width: 21px;
+            height: 20px;
+            margin-right: 2px;
+            border: 1px solid #75638c;
+            background: #211a3b;
+            box-shadow: 0 2px #0a0815;
+            color: var(--gold);
+            font-size: 9px;
+        }
+
+        .platformer {
+            position: relative;
+            overflow: hidden;
+            min-height: 480px;
+            border: 2px solid #68517e;
+            background: linear-gradient(#1d1946 0%,#543563 48%,#b85d78 100%);
+            box-shadow: 8px 8px 0 rgba(10,7,23,.75),9px 9px 0 #594675;
+            isolation: isolate;
+            touch-action: pan-y;
+        }
+
+            .platformer:focus-visible {
+                outline: 2px solid var(--mint);
+                outline-offset: 5px;
+            }
+
+            .platformer::before {
+                content: "";
+                position: absolute;
+                z-index: 20;
+                inset: 0;
+                pointer-events: none;
+                opacity: .27;
+                background: linear-gradient(rgba(247,216,255,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(247,216,255,.13) 1px,transparent 1px);
+                background-size: 27px 27px;
+                mask-image: linear-gradient(to bottom,transparent,black 46%);
+            }
+
+        .game-sun {
+            position: absolute;
+            left: 71%;
+            top: 8%;
+            width: 86px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: linear-gradient(#ffe49e 52%,#eb8b98 53%);
+            box-shadow: 0 0 42px rgba(255,204,151,.32);
+        }
+
+            .game-sun::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 56%;
+                height: 4px;
+                background: #bb6684;
+                box-shadow: 0 9px #bb6684,0 18px #bb6684;
+            }
+
+        .game-mountains {
+            position: absolute;
+            z-index: 1;
+            left: -3%;
+            right: -3%;
+            top: 22%;
+            height: 38%;
+            background: #44305b;
+            clip-path: polygon(0 72%,14% 25%,29% 60%,45% 2%,60% 49%,79% 8%,100% 59%,100% 100%,0 100%);
+        }
+
+            .game-mountains::after {
+                content: "";
+                position: absolute;
+                left: 13%;
+                right: 0;
+                bottom: 0;
+                height: 75%;
+                background: #302744;
+                clip-path: polygon(0 72%,18% 18%,32% 58%,57% 0,75% 52%,100% 17%,100% 100%,0 100%);
+            }
+
+        .game-hud {
+            position: absolute;
+            z-index: 22;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            min-height: 35px;
+            padding: 6px 12px;
+            color: #fff0c3;
+            background: rgba(17,13,35,.55);
+            font-size: 7px;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+            .game-hud strong {
+                color: var(--mint);
+                font-weight: 400;
+            }
+
+            .game-hud .spark {
+                color: var(--gold);
+            }
+
+        .platform {
+            position: absolute;
+            z-index: 4;
+            height: 13px;
+            background: linear-gradient(#d4ad76 0 25%,#48624e 26% 52%,#34324b 53%);
+            border-top: 3px solid #b6d18e;
+            box-shadow: 0 7px 0 rgba(16,13,36,.32);
+        }
+
+            .platform::after {
+                content: "";
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 13px;
+                height: 10px;
+                opacity: .54;
+                background: repeating-linear-gradient(90deg,#4b3a55 0 10px,#6c4a61 10px 14px,transparent 14px 21px);
+            }
+
+            .platform.p1 {
+                left: 3%;
+                top: 73%;
+                width: 17%;
+            }
+
+            .platform.p2 {
+                left: 22%;
+                top: 61%;
+                width: 16%;
+            }
+
+            .platform.p3 {
+                left: 41%;
+                top: 73%;
+                width: 18%;
+            }
+
+            .platform.p4 {
+                left: 62%;
+                top: 55%;
+                width: 16%;
+            }
+
+            .platform.p5 {
+                left: 82%;
+                top: 73%;
+                width: 16%;
+            }
+
+            .platform.floor {
+                left: 0;
+                top: 89%;
+                width: 100%;
+                height: 13%;
+                border-top: 4px solid #a6c17d;
+                background: repeating-linear-gradient(90deg,#344c43 0 24px,#3a5347 24px 29px,#344c43 29px 48px);
+                box-shadow: 0 -5px 0 rgba(202,148,117,.35);
+            }
+
+                .platform.floor::after {
+                    top: 18px;
+                    height: 24px;
+                    background: repeating-linear-gradient(90deg,#332843 0 15px,#40304b 15px 20px,transparent 20px 34px);
+                }
+
+        .skill-location {
+            position: absolute;
+            z-index: 7;
+            display: grid;
+            justify-items: center;
+            gap: 3px;
+            width: 76px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            transform: translateX(-50%);
+            color: #fff0c3;
+            text-shadow: 2px 2px #211831;
+        }
+
+            .skill-location:focus-visible {
+                outline: 2px dashed var(--mint);
+                outline-offset: 4px;
+            }
+
+            .skill-location[data-skill="cpp"] {
+                left: 11.5%;
+                top: calc(73% - 83px);
+            }
+
+            .skill-location[data-skill="python"] {
+                left: 30%;
+                top: calc(61% - 88px);
+            }
+
+            .skill-location[data-skill="web"] {
+                left: 50%;
+                top: calc(73% - 80px);
+            }
+
+            .skill-location[data-skill="javascript"] {
+                left: 70%;
+                top: calc(55% - 91px);
+            }
+
+            .skill-location[data-skill="tools"] {
+                left: 90%;
+                top: calc(73% - 86px);
+            }
+
+        .skill-label {
+            width: max-content;
+            max-width: 100px;
+            padding: 2px 5px;
+            background: rgba(18,14,35,.78);
+            font-size: 7px;
+            line-height: 1.2;
+            letter-spacing: .06em;
+        }
+
+        .skill-object {
+            position: relative;
+            display: block;
+            width: 62px;
+            height: 71px;
+            filter: drop-shadow(3px 4px rgba(13,9,26,.55));
+            image-rendering: pixelated;
+        }
+
+        .tavern::before {
+            content: "";
+            position: absolute;
+            left: 2px;
+            top: 5px;
+            width: 58px;
+            height: 27px;
+            background: #a55168;
+            clip-path: polygon(50% 0,100% 100%,0 100%);
+        }
+
+        .tavern::after {
+            content: "";
+            position: absolute;
+            left: 9px;
+            top: 27px;
+            width: 44px;
+            height: 42px;
+            background: #d59b70;
+            box-shadow: inset 0 -6px #8e5264,0 4px #53334e;
+        }
+
+        .tavern i {
+            position: absolute;
+            z-index: 1;
+            left: 25px;
+            top: 43px;
+            width: 13px;
+            height: 26px;
+            background: #43324a;
+        }
+
+        .tavern b {
+            position: absolute;
+            z-index: 1;
+            left: 13px;
+            top: 35px;
+            width: 9px;
+            height: 9px;
+            background: #ffe28e;
+            box-shadow: 28px 0 #ffe28e,0 0 10px #ffe28e,28px 0 10px #ffe28e;
+        }
+
+        .cave::before {
+            content: "";
+            position: absolute;
+            left: 2px;
+            top: 16px;
+            width: 58px;
+            height: 53px;
+            border-radius: 28px 28px 3px 3px;
+            background: #617469;
+            clip-path: polygon(0 100%,0 43%,10% 43%,10% 23%,26% 23%,26% 7%,44% 7%,44% 0,62% 0,62% 15%,82% 15%,82% 32%,100% 32%,100% 100%);
+        }
+
+        .cave::after {
+            content: "";
+            position: absolute;
+            left: 16px;
+            top: 38px;
+            width: 30px;
+            height: 31px;
+            border-radius: 17px 17px 0 0;
+            background: #17172e;
+            box-shadow: inset 0 0 14px #7960ad;
+        }
+
+        .cave i {
+            position: absolute;
+            z-index: 2;
+            left: 28px;
+            top: 49px;
+            width: 6px;
+            height: 6px;
+            background: #91efd2;
+            box-shadow: 0 0 9px #91efd2;
+        }
+
+        .greenhouse::before {
+            content: "";
+            position: absolute;
+            left: 5px;
+            top: 15px;
+            width: 52px;
+            height: 54px;
+            border: 5px solid #b7d58c;
+            border-bottom-width: 7px;
+            background: repeating-linear-gradient(90deg,transparent 0 15px,rgba(168,228,210,.55) 15px 19px),linear-gradient(145deg,rgba(112,202,171,.5),rgba(42,92,91,.8));
+            clip-path: polygon(0 27%,50% 0,100% 27%,100% 100%,0 100%);
+        }
+
+        .greenhouse::after {
+            content: "";
+            position: absolute;
+            left: 29px;
+            top: 43px;
+            width: 6px;
+            height: 27px;
+            background: #80576a;
+            box-shadow: -12px 8px #83b66f,12px 8px #83b66f;
+        }
+
+        .greenhouse i {
+            position: absolute;
+            left: 8px;
+            top: 29px;
+            width: 46px;
+            height: 3px;
+            background: #d4e9a5;
+        }
+
+        .tower::before {
+            content: "";
+            position: absolute;
+            left: 11px;
+            top: 15px;
+            width: 40px;
+            height: 55px;
+            background: #79679a;
+            border: 3px solid #d2ae7c;
+            clip-path: polygon(0 19%,18% 19%,18% 0,82% 0,82% 19%,100% 19%,100% 100%,0 100%);
+        }
+
+        .tower::after {
+            content: "";
+            position: absolute;
+            left: 18px;
+            top: 2px;
+            width: 27px;
+            height: 20px;
+            background: #d37a78;
+            clip-path: polygon(50% 0,100% 100%,0 100%);
+        }
+
+        .tower i {
+            position: absolute;
+            z-index: 1;
+            left: 27px;
+            top: 39px;
+            width: 10px;
+            height: 15px;
+            background: #ffe08c;
+            box-shadow: 0 0 12px #ffe08c,0 20px #39435d;
+        }
+
+        .forge::before {
+            content: "";
+            position: absolute;
+            left: 7px;
+            top: 27px;
+            width: 48px;
+            height: 42px;
+            background: #66536d;
+            border: 3px solid #bc9a6e;
+            box-shadow: inset 0 -7px #342c48;
+        }
+
+        .forge::after {
+            content: "";
+            position: absolute;
+            left: 14px;
+            top: 13px;
+            width: 34px;
+            height: 28px;
+            background: #aa615e;
+            clip-path: polygon(0 100%,10% 18%,40% 18%,50% 0,60% 18%,90% 18%,100% 100%);
+        }
+
+        .forge i {
+            position: absolute;
+            z-index: 1;
+            left: 28px;
+            top: 44px;
+            width: 8px;
+            height: 10px;
+            background: #ffd376;
+            box-shadow: 0 0 12px #ff9f5c;
+        }
+
+        .goblin {
+            position: absolute;
+            z-index: 12;
+            left: 4%;
+            top: 0;
+            width: 31px;
+            height: 43px;
+            transform: translateX(-50%);
+            pointer-events: none;
+            filter: drop-shadow(0 0 7px rgba(197,255,151,.6));
+        }
+
+            .goblin i, .goblin b, .goblin em {
+                position: absolute;
+                display: block;
+            }
+
+            .goblin .ear {
+                left: 2px;
+                top: 7px;
+                width: 9px;
+                height: 12px;
+                background: #89d26f;
+                clip-path: polygon(0 0,100% 29%,76% 100%);
+            }
+
+                .goblin .ear.right {
+                    left: 21px;
+                    transform: scaleX(-1);
+                }
+
+            .goblin .head {
+                left: 7px;
+                top: 6px;
+                width: 17px;
+                height: 17px;
+                background: #83c96c;
+                box-shadow: 3px 4px #5e9f64;
+            }
+
+            .goblin .hair {
+                left: 8px;
+                top: 4px;
+                width: 14px;
+                height: 5px;
+                background: #425646;
+                box-shadow: 4px 4px #425646;
+            }
+
+            .goblin .eyes {
+                z-index: 1;
+                left: 10px;
+                top: 13px;
+                width: 3px;
+                height: 3px;
+                background: #fff0ad;
+                box-shadow: 8px 0 #fff0ad;
+            }
+
+            .goblin .tunic {
+                left: 5px;
+                top: 23px;
+                width: 21px;
+                height: 13px;
+                background: #cc795f;
+                box-shadow: 0 5px #745078,-3px 4px #ffd36c,20px 4px #ffd36c;
+            }
+
+            .goblin .feet {
+                left: 7px;
+                top: 36px;
+                width: 7px;
+                height: 6px;
+                background: #43334e;
+                box-shadow: 10px 0 #43334e;
+            }
+
+            .goblin.facing-left {
+                transform: translateX(-50%) scaleX(-1);
+            }
+
+            .goblin.walking .feet {
+                animation: goblin-step .14s steps(2,end) infinite alternate;
+            }
+
+        @keyframes goblin-step {
+            to {
+                transform: translateY(-3px);
+            }
+        }
+
+        /* Flat, walkable top-down overworld (no platform collision or gravity). */
+        .overworld {
+            position: relative;
+            min-height: 500px;
+            overflow: hidden;
+            isolation: isolate;
+            border: 2px solid #68517e;
+            background: radial-gradient(ellipse at 50% 48%,#566d5d 0,#395646 49%,#263c43 100%);
+            box-shadow: 8px 8px 0 rgba(10,7,23,.75),9px 9px 0 #594675;
+            touch-action: none;
+        }
+
+            .overworld:focus-visible {
+                outline: 2px solid var(--mint);
+                outline-offset: 5px;
+            }
+
+            .overworld::before {
+                content: "";
+                position: absolute;
+                z-index: 18;
+                inset: 0;
+                pointer-events: none;
+                opacity: .2;
+                background: linear-gradient(rgba(240,241,196,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(240,241,196,.16) 1px,transparent 1px);
+                background-size: 29px 29px;
+                mask-image: linear-gradient(to bottom,transparent,black 17%,black 87%,transparent);
+            }
+
+            .overworld::after {
+                content: "";
+                position: absolute;
+                z-index: 1;
+                inset: 0;
+                pointer-events: none;
+                opacity: .55;
+                background: radial-gradient(ellipse at 50% 48%,transparent 10%,rgba(9,20,30,.38) 100%),repeating-linear-gradient(0deg,transparent 0 31px,rgba(182,209,142,.05) 32px 34px);
+            }
+
+        .overworld-sky {
+            position: absolute;
+            z-index: 0;
+            inset: 0 0 52%;
+            background: linear-gradient(180deg,#1e2448 0%,#6f5476 73%,#d08078 100%);
+        }
+
+            .overworld-sky::before {
+                content: "✦  ·   ✧       ·      ✦       ·  ✧";
+                position: absolute;
+                top: 14%;
+                left: 13%;
+                right: 13%;
+                color: #fff0c3;
+                font-size: 11px;
+                letter-spacing: 2em;
+                opacity: .72;
+                white-space: nowrap;
+            }
+
+            .overworld-sky i {
+                position: absolute;
+                top: 17%;
+                right: 17%;
+                width: 67px;
+                height: 67px;
+                border-radius: 50%;
+                background: linear-gradient(#ffe49e 53%,#e9909a 54%);
+                box-shadow: 0 0 36px rgba(255,211,150,.45);
+            }
+
+                .overworld-sky i::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: 60%;
+                    height: 3px;
+                    background: #ba7387;
+                    box-shadow: 0 8px #ba7387,0 16px #ba7387;
+                }
+
+            .overworld-sky b {
+                position: absolute;
+                left: -3%;
+                right: -3%;
+                bottom: -1px;
+                height: 36%;
+                background: #465069;
+                clip-path: polygon(0 74%,14% 20%,28% 70%,43% 5%,58% 72%,76% 15%,100% 70%,100% 100%,0 100%);
+            }
+
+        .overworld-path {
+            position: absolute;
+            z-index: 2;
+            pointer-events: none;
+            border: 18px dotted rgba(217,183,135,.58);
+            filter: drop-shadow(0 2px rgba(35,34,47,.5));
+        }
+
+        .path-one {
+            left: 7%;
+            right: 6%;
+            top: 43%;
+            height: 23%;
+            border-radius: 48%;
+            transform: rotate(-7deg);
+        }
+
+        .path-two {
+            left: 22%;
+            top: 34%;
+            width: 27%;
+            height: 48%;
+            border-radius: 50%;
+            transform: rotate(30deg);
+        }
+
+        .path-three {
+            left: 56%;
+            top: 30%;
+            width: 24%;
+            height: 48%;
+            border-radius: 50%;
+            transform: rotate(-28deg);
+        }
+
+        .water-pool {
+            position: absolute;
+            z-index: 3;
+            right: 4%;
+            bottom: 7%;
+            width: 20%;
+            height: 17%;
+            border: 5px solid #789a89;
+            border-radius: 50%;
+            background: radial-gradient(ellipse,#8dd0cb 0,#478a9a 62%,#354e66 100%);
+            box-shadow: inset 0 0 0 4px rgba(197,230,189,.23),0 4px #243743;
+        }
+
+            .water-pool i {
+                position: absolute;
+                left: 20%;
+                top: 40%;
+                width: 44%;
+                height: 2px;
+                background: rgba(225,250,220,.7);
+                box-shadow: 20px 11px rgba(225,250,220,.38);
+            }
+
+        .overworld-bush {
+            position: absolute;
+            z-index: 4;
+            width: 50px;
+            height: 31px;
+            border: 4px solid #294744;
+            background: #6e9b63;
+            clip-path: polygon(0 100%,0 55%,13% 55%,13% 27%,31% 27%,31% 0,67% 0,67% 20%,89% 20%,89% 44%,100% 44%,100% 100%);
+            box-shadow: 0 5px #24373b;
+        }
+
+            .overworld-bush::after {
+                content: "";
+                position: absolute;
+                left: 24%;
+                top: 25%;
+                width: 8px;
+                height: 5px;
+                background: #afd381;
+                box-shadow: 15px 7px #8cbd72;
+            }
+
+        .bush-a {
+            left: 4%;
+            top: 24%;
+        }
+
+        .bush-b {
+            left: 39%;
+            top: 77%;
+            transform: scale(1.15);
+        }
+
+        .bush-c {
+            right: 29%;
+            top: 23%;
+            transform: scale(.8);
+        }
+
+        .bush-d {
+            right: 25%;
+            bottom: 8%;
+            transform: scale(1.25);
+        }
+
+        .overworld .game-hud {
+            z-index: 22;
+        }
+
+        .overworld .skill-location {
+            left: var(--x);
+            top: var(--y);
+            transform: translate(-50%,-50%);
+        }
+
+            .overworld .skill-location:focus-visible {
+                z-index: 24;
+            }
+
+        .overworld .skill-object {
+            filter: drop-shadow(3px 4px rgba(13,9,26,.55));
+        }
+
+        .overworld .skill-label {
+            font-size: 9px;
+        }
+
+        .overworld .goblin {
+            z-index: 12;
+        }
+
+        .game-message {
+            min-height: 31px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 4px 0;
+            color: var(--mint);
+            font-size: 7px;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+            .game-message span:last-child {
+                color: #9589a9;
+                text-align: right;
+            }
+
+        .mobile-controls {
+            display: none;
+            grid-template-columns: repeat(3,42px);
+            grid-template-rows: repeat(2,36px);
+            justify-content: center;
+            gap: 4px;
+            margin: 8px auto 13px;
+            touch-action: none;
+        }
+
+            .mobile-controls button {
+                border: 1px solid #695782;
+                background: #241c43;
+                color: var(--gold);
+                font-size: 13px;
+                box-shadow: 0 3px #0a0815;
+                user-select: none;
+                touch-action: none;
+            }
+
+                .mobile-controls button:active {
+                    transform: translateY(2px);
+                    box-shadow: 0 1px #0a0815;
+                }
+
+            .mobile-controls [data-control="up"] {
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            .mobile-controls [data-control="left"] {
+                grid-column: 1;
+                grid-row: 2;
+            }
+
+            .mobile-controls [data-control="down"] {
+                grid-column: 2;
+                grid-row: 2;
+            }
+
+            .mobile-controls [data-control="right"] {
+                grid-column: 3;
+                grid-row: 2;
+            }
+
+        footer {
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid rgba(169,160,200,.25);
+            background: rgba(16,13,36,.82);
+        }
+
+        .footer-inner {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr auto;
+            align-items: center;
+            gap: 25px;
+            padding-top: 29px;
+            padding-bottom: 31px;
+        }
+
+        .footer-brand {
+            color: var(--gold);
+            font-size: 10px;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+        }
+
+            .footer-brand small {
+                display: block;
+                margin-top: 4px;
+                color: var(--muted);
+                font-size: 8px;
+                letter-spacing: .06em;
+                text-transform: none;
+            }
+
+        .footer-links {
+            display: flex;
+            gap: 17px;
+            flex-wrap: wrap;
+            color: #a79abb;
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+
+            .footer-links a:hover {
+                color: var(--mint);
+            }
+
+        .back-top {
+            padding: 8px 10px;
+            border: 1px solid var(--line);
+            color: var(--gold);
+            font-size: 8px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        .footer-bottom {
+            padding: 10px 0 16px;
+            border-top: 1px solid rgba(169,160,200,.13);
+            color: #7e7396;
+            font-size: 7px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 70;
+            display: grid;
+            place-items: center;
+            padding: 20px;
+            background: rgba(6,4,17,.83);
+            backdrop-filter: blur(7px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .24s,visibility .24s;
+        }
+
+            .modal.open {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .modal-panel {
+            position: relative;
+            width: min(900px,100%);
+            max-height: min(90vh,850px);
+            overflow: auto;
+            overscroll-behavior: contain;
+            border: 2px solid var(--gold);
+            background: #191431;
+            box-shadow: 8px 8px 0 #714b7b;
+            transform: translateY(15px) scale(.975);
+            transition: transform .26s cubic-bezier(.2,.75,.2,1);
+            scrollbar-color: #725b87 #191431;
+        }
+
+        .modal.open .modal-panel {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal.closing {
+            opacity: 0;
+            visibility: visible;
+        }
+
+            .modal.closing .modal-panel {
+                transform: translateY(12px) scale(.98);
+            }
+
+        .modal-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            padding: 15px 19px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .modal-kicker {
+            color: var(--mint);
+            font-size: 8px;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+        }
+
+        .close-button {
+            width: 32px;
+            height: 32px;
+            flex: 0 0 auto;
+            border: 1px solid #594675;
+            background: #241c43;
+            color: var(--gold);
+            font-size: 19px;
+            line-height: 1;
+        }
+
+        .project-modal-content {
+            padding: 20px;
+        }
+
+        .project-modal-main {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 22px;
+        }
+
+        .modal-cover {
+            width: 100%;
+            overflow: hidden;
+            border: 1px solid #695483;
+            background: #100d24;
+        }
+
+            .modal-cover img {
+                display: block;
+                width: 100%;
+                height: auto;
+                aspect-ratio: 920 / 540;
+                object-fit: contain;
+            }
+
+        .modal-project-title {
+            margin: 8px 0 10px;
+            color: var(--gold);
+            font-size: 25px;
+            letter-spacing: -.04em;
+            text-transform: uppercase;
+        }
+
+        .modal-project-copy {
+            color: #c2b9d5;
+            font-size: 10px;
+            line-height: 2;
+        }
+
+        .modal-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 15px 0;
+        }
+
+            .modal-stack span {
+                padding: 4px 7px;
+                border: 1px solid #584768;
+                color: #d7cbe7;
+                font-size: 7px;
+            }
+
+        .project-link {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            color: var(--mint);
+            font-size: 8px;
+            letter-spacing: .11em;
+            text-transform: uppercase;
+        }
+
+        .carousel {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+        }
+
+        .carousel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 11px;
+        }
+
+            .carousel-head h3 {
+                margin: 0;
+                font-size: 10px;
+                letter-spacing: .12em;
+                text-transform: uppercase;
+            }
+
+        .carousel-count {
+            color: var(--muted);
+            font-size: 8px;
+        }
+
+        .slide-view {
+            overflow: hidden;
+            border: 1px solid #514264;
+            background: #100d24;
+        }
+
+            .slide-view img {
+                display: block;
+                width: 100%;
+                max-height: 275px;
+                aspect-ratio: 2.2;
+                object-fit: cover;
+                transition: opacity .16s;
+            }
+
+                .slide-view img.changing {
+                    opacity: .2;
+                }
+
+        .slide-caption {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 11px;
+            color: #c9bfd9;
+            font-size: 8px;
+        }
+
+        .carousel-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 11px;
+        }
+
+        .carousel-arrow {
+            width: 34px;
+            height: 31px;
+            border: 1px solid #695782;
+            background: #241c43;
+            color: var(--gold);
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 7px;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            padding: 0;
+            border: 1px solid #8a7a9e;
+            background: transparent;
+        }
+
+            .carousel-dot[aria-current="true"] {
+                background: var(--gold);
+                border-color: var(--gold);
+                box-shadow: 0 0 7px rgba(255,214,110,.5);
+            }
+
+        .skill-dialog {
+            width: min(470px,100%);
+            padding: 27px;
+            border: 2px solid var(--mint);
+            background: #191431;
+            box-shadow: 8px 8px 0 #49694f;
+        }
+
+            .skill-dialog .modal-top {
+                margin: -27px -27px 22px;
+                border-color: #49694f;
+            }
+
+            .skill-dialog h2 {
+                color: var(--gold);
+                font-size: 24px;
+            }
+
+            .skill-dialog p {
+                color: #c3bbd9;
+                font-size: 10px;
+                line-height: 2;
+            }
+
+            .skill-dialog ul {
+                display: grid;
+                gap: 8px;
+                padding: 0;
+                margin: 18px 0;
+                list-style: none;
+                color: #e0d6ed;
+                font-size: 9px;
+            }
+
+            .skill-dialog li::before {
+                content: "▶";
+                margin-right: 9px;
+                color: var(--mint);
+                font-size: 8px;
+            }
+
+        .skill-status {
+            min-height: 18px;
+            color: var(--mint) !important;
+        }
+
+        .skill-modal-hint {
+            margin-bottom: 0;
+            color: #807694 !important;
+            font-size: 7px !important;
+            letter-spacing: .13em;
+        }
+
+        @media (max-width:900px) {
+            .topbar-inner {
+                gap: 12px;
+            }
+
+            .health {
+                min-width: 145px;
+                gap: 6px;
+            }
+
+            .health-track {
+                width: 82px;
+            }
+
+            .nav-links {
+                gap: 13px;
+            }
+
+                .nav-links a {
+                    font-size: 8px;
+                }
+
+            .intro {
+                gap: 25px;
+            }
+
+            .projects-grid {
+                gap: 12px;
+            }
+
+            .project-info {
+                padding: 13px;
+            }
+        }
+
+        @media (max-width:700px) {
+            :root {
+                --header-h: 66px;
+            }
+
+            .topbar-inner {
+                width: calc(100% - 28px);
+            }
+
+            .brand {
+                font-size: 9px;
+                gap: 9px;
+            }
+
+            .brand-mark {
+                width: 27px;
+                height: 27px;
+            }
+
+            .menu-toggle {
+                display: block;
+                order: 3;
+            }
+
+            .nav-right {
+                gap: 12px;
+            }
+
+            .nav-links {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0;
+                position: absolute;
+                top: calc(100% + 1px);
+                left: 0;
+                right: 0;
+                max-height: 0;
+                overflow: hidden;
+                visibility: hidden;
+                opacity: 0;
+                transform: translateY(-8px);
+                padding: 0 20px;
+                border-bottom: 1px solid transparent;
+                background: rgba(16,13,36,.98);
+                box-shadow: 0 8px 18px rgba(0,0,0,0);
+                transition: max-height .32s ease,opacity .22s ease,transform .28s ease,padding .28s ease,visibility 0s linear .32s,border-color .22s,box-shadow .22s;
+            }
+
+                .nav-links.open {
+                    max-height: 300px;
+                    visibility: visible;
+                    opacity: 1;
+                    transform: translateY(0);
+                    padding: 12px 20px 16px;
+                    gap: 0;
+                    border-color: var(--line);
+                    box-shadow: 0 8px 18px rgba(0,0,0,.35);
+                    transition: max-height .32s ease,opacity .22s ease,transform .28s ease,padding .28s ease,visibility 0s,border-color .22s,box-shadow .22s;
+                }
+
+                .nav-links a {
+                    width: min(100%,320px);
+                    padding: 11px 12px;
+                    text-align: center;
+                    font-size: 11px;
+                    border-bottom: 1px solid rgba(169,160,200,.12);
+                }
+
+                    .nav-links a:last-child {
+                        border-bottom: 0;
+                    }
+
+                    .nav-links a[aria-current="location"] {
+                        color: var(--gold);
+                        background: rgba(255,214,110,.08);
+                        box-shadow: inset 3px 0 var(--gold);
+                    }
+
+            .health {
+                min-width: 132px;
+                gap: 5px;
+            }
+
+            .health-label {
+                font-size: 7px;
+            }
+
+            .health-track {
+                width: 72px;
+                height: 12px;
+            }
+
+            .hp-number {
+                min-width: 26px;
+                font-size: 7px;
+            }
+
+            .hp-heart, .hp-skull {
+                width: 17px;
+                height: 17px;
+            }
+
+            .shell {
+                width: min(100% - 32px,1120px);
+            }
+
+            .intro {
+                min-height: 0;
+                grid-template-columns: 1fr;
+                gap: 32px;
+                padding-top: 55px;
+                padding-bottom: 70px;
+            }
+
+            .intro-copy {
+                max-width: 590px;
+            }
+
+                .intro-copy > p {
+                    font-size: 11px;
+                }
+
+            h1 {
+                font-size: clamp(51px,13vw,76px);
+            }
+
+            .portrait-wrap {
+                width: min(100%,420px);
+            }
+
+            .scroll-hint {
+                display: none;
+            }
+
+            .section {
+                padding: 86px 0 98px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+
+            .project-card:last-child {
+                grid-column: auto;
+            }
+
+            .section-head {
+                align-items: start;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .section-note {
+                text-align: left;
+            }
+
+            .overworld {
+                min-height: 430px;
+            }
+
+            .skill-object {
+                transform: scale(.83);
+                transform-origin: bottom center;
+            }
+
+            .skill-location {
+                width: 63px;
+            }
+
+            .skill-label {
+                font-size: 6px;
+            }
+
+            .game-message {
+                font-size: 6px;
+            }
+
+            .mobile-controls {
+                display: grid;
+            }
+
+            .footer-inner {
+                grid-template-columns: 1fr auto;
+                gap: 16px;
+            }
+
+            .footer-links {
+                grid-column: 1 / -1;
+                grid-row: 2;
+            }
+        }
+
+        @media (max-width:420px) {
+            .brand-name em {
+                font-size: 7px;
+            }
+
+            .health {
+                min-width: 112px;
+            }
+
+            .health-track {
+                width: 56px;
+            }
+
+            .health-label {
+                font-size: 6px;
+            }
+
+            .hp-number {
+                min-width: 23px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-card:last-child {
+                grid-column: auto;
+            }
+
+            .project-thumb {
+                aspect-ratio: 1.8;
+            }
+
+            .overworld {
+                min-height: 370px;
+            }
+
+            .skill-location {
+                width: 68px;
+            }
+
+            .skill-label {
+                max-width: 85px;
+                font-size: 8px;
+            }
+
+            .skill-object {
+                transform: scale(.8);
+            }
+
+            .game-hud {
+                font-size: 6px;
+            }
+
+            .project-modal-content {
+                padding: 14px;
+            }
+
+            .project-modal-main {
+                gap: 15px;
+            }
+
+            .modal-project-title {
+                font-size: 21px;
+            }
+
+            .slide-view img {
+                aspect-ratio: 1.7;
+            }
+        }
+        /* Readable pixel UI: decorative labels remain compact, but body copy and controls stay comfortable. */
+        .nav-links a {
+            font-size: 10px;
+        }
+
+        .health-label {
+            font-size: 9px;
+        }
+
+        .hp-number {
+            font-size: 9px;
+        }
+
+        .kicker, .section-kicker {
+            font-size: 10px;
+        }
+
+        .intro-copy > p {
+            font-size: 14px;
+            line-height: 1.85;
+        }
+
+        .button, .plain-link {
+            font-size: 10px;
+        }
+
+        .status-line, .portrait-tag, .portrait-caption, .scroll-hint {
+            font-size: 9px;
+        }
+
+        .section-note {
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .project-meta {
+            font-size: 9px;
+        }
+
+        .project-blurb {
+            font-size: 11px;
+        }
+
+        .tag {
+            font-size: 9px;
+        }
+
+        .skills-intro {
+            font-size: 12px;
+        }
+
+        .skill-controls {
+            font-size: 10px;
+        }
+
+        .keycap {
+            font-size: 11px;
+        }
+
+        .skill-label {
+            font-size: 9px;
+        }
+
+        .game-hud {
+            font-size: 9px;
+        }
+
+        .game-message {
+            font-size: 9px;
+        }
+
+        .footer-brand {
+            font-size: 11px;
+        }
+
+            .footer-brand small {
+                font-size: 10px;
+            }
+
+        .footer-links, .back-top {
+            font-size: 10px;
+        }
+
+        .footer-bottom {
+            font-size: 9px;
+        }
+
+        .modal-kicker, .carousel-count, .slide-caption, .project-link {
+            font-size: 10px;
+        }
+
+        .modal-project-copy, .skill-dialog p {
+            font-size: 12px;
+        }
+
+        .skill-dialog ul {
+            font-size: 11px;
+        }
+
+        .skill-modal-hint {
+            font-size: 9px !important;
+        }
+
+        @media (max-width:700px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-card:last-child {
+                grid-column: auto;
+            }
+
+            .project-thumb {
+                aspect-ratio: 1.8;
+            }
+
+            .nav-links a {
+                font-size: 12px;
+            }
+
+            .intro-copy > p {
+                font-size: 13px;
+            }
+
+            .overworld {
+                min-height: 430px;
+            }
+
+            .skill-label {
+                font-size: 8px;
+            }
+
+            .project-meta {
+                font-size: 9px;
+            }
+
+            .tag {
+                font-size: 9px;
+            }
+
+            .footer-links {
+                font-size: 9px;
+            }
+
+            .nav-links a[aria-current="location"] {
+                box-shadow: inset 0 -2px var(--gold);
+            }
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="magic-bg" aria-hidden="true"></canvas>
+    <header class="topbar">
+        <div class="topbar-inner">
+            <a class="brand" href="#top" aria-label="Alex Morgan, home">
+                <span class="brand-mark" aria-hidden="true"><span>✦</span></span>
+                <span class="brand-name">ALEX MORGAN<em>DEVELOPER · WORLD BUILDER</em></span>
+            </a>
+            <div class="nav-right">
+                <nav class="nav-links" id="site-nav" aria-label="Main navigation">
+                    <a href="#top">About</a><a href="#projects">Projects</a><a href="#skills">Skills</a><a href="#contact">Contact</a>
+                </nav>
+                <div class="health" aria-label="Portfolio progress health">
+                    <span class="health-label">HP</span>
+                    <div class="health-track" id="health-track" role="progressbar" aria-label="Portfolio exploration progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+                        <div class="health-fill" id="health-fill"></div>
+                        <span class="hp-heart" id="hp-heart" aria-hidden="true"><svg viewBox="0 0 13 12"><path fill="#ff7184" d="M2 0h3v1h2V0h3v1h2v4h-1v2h-2v2H7v2H5V9H3V7H1V5H0V1h2z" /><path fill="#ffc0c2" d="M2 1h3v1H2zm1 2h2v1H3z" /><path fill="#b74768" d="M8 8h2v1H8zm-2 2h2v1H6z" /></svg></span>
+                        <span class="hp-skull" id="hp-skull" aria-hidden="true"><svg viewBox="0 0 12 13"><path fill="#fff0c3" d="M3 0h6v1h2v2h1v5h-2v2H8v3H7v-2H5v2H4v-3H2V8H0V3h1V1h2z" /><path fill="#342544" d="M3 4h2v2H3zm4 0h2v2H7zM5 8h2v1H5z" /><path fill="#ec7181" d="M5 10h2v2H5z" /></svg></span>
+                    </div>
+                    <span class="hp-number" id="hp-number">100%</span>
+                </div>
+                <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="site-nav"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="shell intro" id="top" aria-labelledby="intro-title">
+            <div class="intro-copy">
+                <div class="kicker">Player one · Developer profile</div>
+                <h1 id="intro-title">Hi, I'm Alex<span>I build things that feel alive.</span></h1>
+                <p><strong>Developer, curious problem-solver, and lifelong pixel enthusiast.</strong> I turn complex ideas into thoughtful web experiences, useful tools, and the occasional tiny game. I care about clear code, inclusive design, and details that make software a little more human.</p>
+                <div class="intro-actions">
+                    <a class="button" href="#projects"><span class="arrow" aria-hidden="true">▶</span> View selected work</a>
+                    <a class="plain-link" href="#contact">Let's talk <span aria-hidden="true">↗</span></a>
+                </div>
+                <div class="status-line">Current status <strong>◆ Open to good quests</strong></div>
+            </div>
+            <div class="portrait-wrap" aria-label="Pixel art portrait of Alex against a sunset mountain landscape">
+                <div class="portrait" role="img" aria-label="A small pixel adventurer looking toward a glowing sunset">
+                    <span class="portrait-tag">PLAYER 01 · DEV MODE</span><span class="portrait-sun"></span><span class="portrait-hill"></span>
+                    <span class="portrait-avatar" aria-hidden="true"><i></i><b></b></span>
+                </div>
+                <div class="portrait-caption"><span>Currently exploring</span><strong>Good ideas & good coffee</strong></div>
+            </div>
+            <div class="scroll-hint" aria-hidden="true">Scroll to explore <span>↓</span></div>
+        </section>
+
+        <section class="shell section" id="projects" aria-labelledby="projects-title">
+            <div class="section-head">
+                <div><div class="section-kicker">Selected builds · 2023—2025</div><h2 id="projects-title">A few things I've made</h2></div>
+                <p class="section-note">Curiosity in, useful pixels out. Pick a project to open its field notes.</p>
+            </div>
+            <div class="projects-grid" id="projects-grid" aria-label="Selected projects"></div>
+        </section>
+
+        <section class="shell section skills-section" id="skills" aria-labelledby="skills-title">
+            <div class="section-head">
+                <div><div class="section-kicker">Skill tree · interactive edition</div><h2 id="skills-title">Pick a path. Find a skill.</h2></div>
+                <p class="section-note">A curious goblin is scouting the toolkit. Guide them around the level to open each skill card.</p>
+            </div>
+            <p class="skills-intro">Explore the skill overworld in any direction. Bump into a landmark to open its details. Focus the map first—keyboard, touch controls, and landmark buttons are all supported.</p>
+            <div class="skill-controls" id="skill-instructions"><span><b class="keycap">↑</b><b class="keycap">←</b><b class="keycap">↓</b><b class="keycap">→</b> MOVE · WASD ALSO WORKS</span><span>WALK INTO A PLACE TO EXPLORE</span></div>
+            <div class="overworld" id="overworld" tabindex="0" role="region" aria-label="Interactive top-down skill overworld. Use arrow keys or WASD to move the goblin. Walk into a skill landmark to open its details." aria-describedby="skill-instructions">
+                <div class="game-hud"><span>SKILL TREE <i class="spark">✦</i> WORLD 01</span><span>GOBLIN <strong>LV. 08</strong> · XP <strong id="skill-xp">000</strong></span></div>
+                <div class="overworld-sky" aria-hidden="true"><i></i><b></b></div>
+                <div class="overworld-path path-one" aria-hidden="true"></div><div class="overworld-path path-two" aria-hidden="true"></div><div class="overworld-path path-three" aria-hidden="true"></div>
+                <div class="water-pool" aria-hidden="true"><i></i></div>
+                <div class="overworld-bush bush-a" aria-hidden="true"></div><div class="overworld-bush bush-b" aria-hidden="true"></div><div class="overworld-bush bush-c" aria-hidden="true"></div><div class="overworld-bush bush-d" aria-hidden="true"></div>
+                <button class="skill-location" style="--x:16%;--y:29%" data-skill="cpp" type="button" aria-label="C plus plus tavern. Walk into it for C plus plus skill details."><span class="skill-object tavern" aria-hidden="true"><i></i><b></b></span><span class="skill-label">C++ TAVERN</span></button>
+                <button class="skill-location" style="--x:49%;--y:24%" data-skill="python" type="button" aria-label="Python cave. Walk into it for Python skill details."><span class="skill-object cave" aria-hidden="true"><i></i></span><span class="skill-label">PYTHON CAVE</span></button>
+                <button class="skill-location" style="--x:82%;--y:33%" data-skill="web" type="button" aria-label="Web greenhouse. Walk into it for HTML and CSS skill details."><span class="skill-object greenhouse" aria-hidden="true"><i></i></span><span class="skill-label">WEB GARDEN</span></button>
+                <button class="skill-location" style="--x:28%;--y:72%" data-skill="javascript" type="button" aria-label="JavaScript tower. Walk into it for JavaScript skill details."><span class="skill-object tower" aria-hidden="true"><i></i></span><span class="skill-label">JS TOWER</span></button>
+                <button class="skill-location" style="--x:72%;--y:73%" data-skill="tools" type="button" aria-label="Git forge. Walk into it for tools and workflow skill details."><span class="skill-object forge" aria-hidden="true"><i></i></span><span class="skill-label">GIT FORGE</span></button>
+                <div class="goblin" id="goblin" aria-hidden="true"><i class="ear"></i><i class="ear right"></i><i class="head"></i><i class="hair"></i><b class="eyes"></b><i class="tunic"></i><em class="feet"></em></div>
+            </div>
+            <div class="game-message"><span id="game-status" aria-live="polite">The goblin is ready. Focus the map and start exploring!</span><span>ARROWS / WASD · ESC CLOSES MENUS</span></div>
+            <div class="mobile-controls" aria-label="Overworld movement controls"><button type="button" data-control="up" aria-label="Move up">▲</button><button type="button" data-control="left" aria-label="Move left">◀</button><button type="button" data-control="down" aria-label="Move down">▼</button><button type="button" data-control="right" aria-label="Move right">▶</button></div>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="shell footer-inner">
+            <div class="footer-brand">Alex Morgan · Developer<small>Thanks for stopping by this little corner of the internet.</small></div>
+            <div class="footer-links"><a href="mailto:hello@example.com">Email</a><a href="https://github.com/" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn ↗</a><a href="#projects">Project log</a></div>
+            <a class="back-top" href="#top">↑ Back to top</a>
+        </div>
+        <div class="shell footer-bottom">© 2025 Alex Morgan · Hand-coded with a little magic · You made it to the end!</div>
+    </footer>
+
+    <div class="modal" id="project-modal" aria-hidden="true">
+        <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-project-title" aria-describedby="modal-project-copy">
+            <div class="modal-top"><span class="modal-kicker" id="modal-project-kicker">FIELD NOTES · PROJECT</span><button class="close-button" type="button" data-close-project aria-label="Close project details">×</button></div>
+            <div class="project-modal-content">
+                <div class="project-modal-main">
+                    <div class="modal-cover"><img id="modal-cover-image" alt=""></div>
+                    <div><div class="section-kicker" id="modal-project-category"></div><h2 class="modal-project-title" id="modal-project-title"></h2><p class="modal-project-copy" id="modal-project-copy"></p><div class="modal-stack" id="modal-stack"></div><a class="project-link" id="modal-project-link" href="#" target="_blank" rel="noreferrer">View project <span aria-hidden="true">↗</span></a></div>
+                </div>
+                <div class="carousel" aria-label="Project image carousel">
+                    <div class="carousel-head"><h3>More from this build</h3><span class="carousel-count" id="carousel-count" aria-live="polite"></span></div>
+                    <div class="slide-view"><img id="carousel-image" alt=""><div class="slide-caption"><span id="carousel-title"></span><span id="carousel-description"></span></div></div>
+                    <div class="carousel-controls"><button class="carousel-arrow" id="carousel-prev" type="button" aria-label="Previous project image">←</button><div class="carousel-dots" id="carousel-dots" aria-label="Choose project image"></div><button class="carousel-arrow" id="carousel-next" type="button" aria-label="Next project image">→</button></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal" id="skill-modal" aria-hidden="true">
+        <section class="modal-panel skill-dialog" role="dialog" aria-modal="true" aria-labelledby="skill-dialog-title" aria-describedby="skill-dialog-copy">
+            <div class="modal-top"><span class="modal-kicker" id="skill-dialog-kicker">SKILL FOUND · INVENTORY</span><button class="close-button" type="button" data-close-skill aria-label="Close skill details">×</button></div>
+            <h2 id="skill-dialog-title">Skill unlocked</h2><p id="skill-dialog-copy"></p><ul id="skill-dialog-list"></ul><p class="skill-status" id="skill-dialog-status" aria-live="polite"></p><p class="skill-modal-hint">ESC · CLOSE MENU · CLOSE TO KEEP EXPLORING</p>
+        </section>
+    </div>
+
+    <div class="crt" aria-hidden="true"></div>
+    <script>
+        (() => {
+            const projects = [
+                {
+                    id: 'spriteforge', title: 'SpriteForge', category: 'Creative tooling', year: '2025', blurb: 'A tiny animation workbench for people who think in pixels.',
+                    description: 'A browser-based pixel animation studio designed to make a focused creative workflow feel joyful. I built the timeline, frame tools, palette controls, and export flow with an emphasis on keyboard access and fast feedback.',
+                    stack: ['TypeScript', 'Canvas API', 'Web Components'], colors: ['#212347', '#7f5bb4', '#ffb869', '#80e2c1'], symbol: '✦',
+                    slides: [
+                        { title: 'The frame editor', caption: 'A compact, keyboard-friendly canvas.' },
+                        { title: 'Palette lab', caption: 'Reusable color sets for tiny worlds.' },
+                        { title: 'Animation timeline', caption: 'Scrub, reorder, and preview each frame.' },
+                        { title: 'Export panel', caption: 'Optimized spritesheets, ready to ship.' }
+                    ], link: 'https://github.com/'
+                },
+                {
+                    id: 'mossmetric', title: 'Moss & Metric', category: 'Data + environment', year: '2024', blurb: 'A map-first dashboard that turns habitat data into action.',
+                    description: 'A responsive field dashboard for conservation teams. The experience brings location data, observations, and trends together in a map-led interface, with low-bandwidth states and clear visual summaries for field use.',
+                    stack: ['Python', 'Django', 'PostgreSQL', 'MapLibre'], colors: ['#163d3d', '#458b6a', '#bdd88a', '#f1bd73'], symbol: '✿',
+                    slides: [
+                        { title: 'The living map', caption: 'Habitat signals at a glance.' },
+                        { title: 'Field observations', caption: 'Fast entry, even with muddy boots.' },
+                        { title: 'Seasonal patterns', caption: 'Make long-term change easy to see.' }
+                    ], link: 'https://github.com/'
+                },
+                {
+                    id: 'orbitnotes', title: 'Orbit Notes', category: 'Productivity', year: '2023', blurb: 'A calm, offline-first notebook for thoughts in motion.',
+                    description: 'A deliberately quiet note-taking app built around local-first data and fast search. I designed the visual language, implemented sync-safe storage and command shortcuts, and tuned the interface to stay out of the way.',
+                    stack: ['JavaScript', 'IndexedDB', 'Vite', 'CSS'], colors: ['#281f4c', '#6556a6', '#e38ca2', '#ffd779'], symbol: '☾',
+                    slides: [
+                        { title: 'A softer home screen', caption: 'Recent notes without the noise.' },
+                        { title: 'Quick capture', caption: 'An idea saved in a single keystroke.' },
+                        { title: 'Search by constellation', caption: 'Find the thought you almost forgot.' },
+                        { title: 'Offline by design', caption: 'Your notes stay yours, everywhere.' },
+                        { title: 'The tiny details', caption: 'Small affordances, considered carefully.' }
+                    ], link: 'https://github.com/'
+                }
+            ];
+
+            const esc = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+            function artData(project, title, index = 0) {
+                const [dark, mid, warm, cool] = project.colors;
+                const shift = index * 17;
+                const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 540" role="img"><defs><linearGradient id="g" x2="0" y2="1"><stop stop-color="${dark}"/><stop offset="1" stop-color="${mid}"/></linearGradient><pattern id="p" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0v32" fill="none" stroke="#fff" stroke-opacity=".08"/></pattern></defs><path fill="url(#g)" d="M0 0h920v540H0z"/><path fill="url(#p)" d="M0 0h920v540H0z"/><circle cx="${735 - shift}" cy="105" r="76" fill="${warm}" opacity=".88"/><path d="M0 374 160 245l134 110 162-179 170 176 115-119 179 144v163H0z" fill="${dark}" opacity=".82"/><path d="M0 442 181 351l133 77 182-139 163 114 138-83 123 76v144H0z" fill="${cool}" opacity=".7"/><rect x="${170 + shift}" y="128" width="470" height="270" rx="8" fill="#100d24" fill-opacity=".82" stroke="#fff" stroke-opacity=".46" stroke-width="3"/><rect x="${188 + shift}" y="146" width="434" height="228" fill="${dark}" stroke="${warm}" stroke-opacity=".65" stroke-width="2"/><path d="M${212 + shift} 326h105v-69h80v44h108v-90h89v113H${212 + shift}z" fill="${cool}" opacity=".92"/><path d="M${212 + shift} 302h44v-81h42v81h63v-53h46v53h45v-115h43v115h92" fill="none" stroke="${warm}" stroke-width="7" stroke-linejoin="round"/><circle cx="${266 + shift}" cy="196" r="9" fill="${warm}"/><circle cx="${466 + shift}" cy="217" r="8" fill="#fff0c3"/><text x="${460 + shift / 3}" y="${273 + shift / 3}" fill="#fff0c3" font-family="monospace" font-size="68" text-anchor="middle" opacity=".88">${esc(project.symbol)}</text><rect x="${187 + shift}" y="146" width="434" height="28" fill="#100d24"/><circle cx="${201 + shift}" cy="160" r="4" fill="#ff7e8a"/><circle cx="${216 + shift}" cy="160" r="4" fill="#ffd66e"/><circle cx="${231 + shift}" cy="160" r="4" fill="#81f2c0"/><text x="54" y="476" fill="#fff0c3" font-family="monospace" font-size="24" letter-spacing="6">${esc(title.toUpperCase()).slice(0, 38)}</text><text x="55" y="510" fill="#fff" fill-opacity=".68" font-family="monospace" font-size="12" letter-spacing="3">ALEX MORGAN · SELECTED WORK</text></svg>`;
+                return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+            }
+
+            const grid = document.getElementById('projects-grid');
+            projects.forEach(project => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'project-card';
+                button.dataset.project = project.id;
+                button.setAttribute('aria-label', `Open ${project.title} project details`);
+                button.innerHTML = `<span class="project-thumb"><img src="${artData(project, project.title)}" alt="Pixel-art interface concept for ${esc(project.title)}"><span class="project-open">Open field notes ↗</span></span><span class="project-info"><span class="project-meta"><span>${esc(project.category)}</span><span>${esc(project.year)}</span></span><span class="project-title">${esc(project.title)}</span><span class="project-blurb">${esc(project.blurb)}</span><span class="tag-list">${project.stack.slice(0, 3).map(tag => `<span class="tag">${esc(tag)}</span>`).join('')}</span></span>`;
+                grid.append(button);
+            });
+
+            // Scroll-reactive pixel magic; particle positions drift at a slower rate than the page.
+            const canvas = document.getElementById('magic-bg');
+            const ctx = canvas.getContext('2d');
+            const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+            let particles = [], width = 0, height = 0, scrollY = window.scrollY, raf = 0, lastFrame = 0;
+            const pointer = { x: -1000, y: -1000, active: false };
+            function resizeCanvas() {
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                width = window.innerWidth; height = window.innerHeight;
+                canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                const count = Math.max(28, Math.min(75, Math.round(width * height / 16000)));
+                particles = Array.from({ length: count }, (_, i) => ({ x: Math.random() * width, y: Math.random() * height, vx: (Math.random() - .5) * .14, vy: (Math.random() - .5) * .14, size: 2 + Math.floor(Math.random() * 3), phase: Math.random() * 6.28, speed: .12 + Math.random() * .28, hue: i % 5 }));
+                lastFrame = performance.now();
+                drawParticles(performance.now());
+            }
+            function drawParticles(now) {
+                ctx.clearRect(0, 0, width, height);
+                const palette = ['#ffd66e', '#81f2c0', '#83caff', '#ff9ca9', '#c2a5ff'];
+                const delta = Math.min(Math.max((now - lastFrame) / 16.667, .5), 2.5);
+                lastFrame = now;
+                for (const p of particles) {
+                    // A broad, gentle force changes particle velocity rather than teleporting its position.
+                    let repel = 0;
+                    const screenY = p.y - scrollY * .17;
+                    if (pointer.active) {
+                        const dx = p.x - pointer.x, dy = screenY - pointer.y, distance = Math.hypot(dx, dy), radius = 138;
+                        if (distance < radius) {
+                            repel = 1 - distance / radius;
+                            const safeDistance = Math.max(1, distance);
+                            const acceleration = .012 * repel * delta;
+                            p.vx += (dx / safeDistance) * acceleration;
+                            p.vy += (dy / safeDistance) * acceleration;
+                        }
+                    }
+                    // Gentle ambient drift plus friction lets sparks coast, then settle after leaving the pointer.
+                    p.vx += Math.sin(now * .00055 + p.phase) * .0012 * delta;
+                    p.vy += Math.cos(now * .00042 + p.phase) * .001 * delta;
+                    const damping = Math.pow(.984, delta);
+                    p.vx *= damping; p.vy *= damping;
+                    const speed = Math.hypot(p.vx, p.vy), maxSpeed = .72;
+                    if (speed > maxSpeed) { p.vx = p.vx / speed * maxSpeed; p.vy = p.vy / speed * maxSpeed; }
+                    p.x += p.vx * delta; p.y += p.vy * delta;
+                    if (p.x < -8) p.x = width + 8; else if (p.x > width + 8) p.x = -8;
+                    if (p.y - scrollY * .17 < -12) p.y += height + 24; else if (p.y - scrollY * .17 > height + 12) p.y -= height + 24;
+                    const x = p.x + Math.sin(now * .0003 + p.phase) * 3;
+                    const y = p.y - scrollY * .17;
+                    const alpha = .2 + (Math.sin(now * .0015 + p.phase) + 1) * .28;
+                    ctx.globalAlpha = alpha;
+                    if (repel > .01) {
+                        const base = palette[p.hue], r = parseInt(base.slice(1, 3), 16), g = parseInt(base.slice(3, 5), 16), b = parseInt(base.slice(5, 7), 16);
+                        const blend = Math.min(.7, repel * .68), target = [224, 151, 255];
+                        ctx.fillStyle = `rgb(${Math.round(r + (target[0] - r) * blend)} ${Math.round(g + (target[1] - g) * blend)} ${Math.round(b + (target[2] - b) * blend)})`;
+                    } else ctx.fillStyle = palette[p.hue];
+                    ctx.fillRect(Math.round(x), Math.round(y), p.size, p.size);
+                    if (p.size > 3) { ctx.fillRect(Math.round(x - 2), Math.round(y + 1), p.size + 4, 1); ctx.fillRect(Math.round(x + 1), Math.round(y - 2), 1, p.size + 4); }
+                }
+                ctx.globalAlpha = 1;
+            }
+            function animateParticles(now) {
+                raf = 0;
+                if (now - lastFrame > 24) drawParticles(now);
+                if (!reducedMotion.matches) raf = requestAnimationFrame(animateParticles);
+            }
+            function requestParticleDraw() { if (!raf) raf = requestAnimationFrame(animateParticles); }
+            window.addEventListener('scroll', () => { scrollY = window.scrollY; requestParticleDraw(); }, { passive: true });
+            window.addEventListener('pointermove', event => { pointer.x = event.clientX; pointer.y = event.clientY; pointer.active = true; requestParticleDraw(); }, { passive: true });
+            window.addEventListener('pointerleave', () => { pointer.active = false; requestParticleDraw(); }, { passive: true });
+            window.addEventListener('resize', resizeCanvas);
+            reducedMotion.addEventListener?.('change', () => { if (raf) cancelAnimationFrame(raf); raf = 0; if (!reducedMotion.matches) requestParticleDraw(); else drawParticles(performance.now()); });
+            resizeCanvas(); if (!reducedMotion.matches) requestParticleDraw();
+
+            // The pixel health meter loses one point of HP for each step through the portfolio.
+            const footer = document.querySelector('footer');
+            const healthFill = document.getElementById('health-fill');
+            const healthTrack = document.getElementById('health-track');
+            const hpNumber = document.getElementById('hp-number');
+            function updateHealth() {
+                const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+                const progress = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+                const hp = Math.round((1 - progress) * 100);
+                healthFill.style.width = `${hp}%`;
+                healthTrack.style.setProperty('--health', `${hp}%`);
+                healthTrack.querySelectorAll('.hp-heart,.hp-skull').forEach(marker => marker.style.left = `${hp}%`);
+                healthTrack.setAttribute('aria-valuenow', String(hp));
+                healthTrack.setAttribute('aria-valuetext', `${hp}% health remaining`);
+                hpNumber.textContent = `${hp}%`;
+                document.body.classList.toggle('dead-health', hp === 0);
+            }
+            window.addEventListener('scroll', updateHealth, { passive: true }); window.addEventListener('resize', updateHealth); updateHealth();
+
+            // Responsive sticky navigation / hamburger.
+            const toggle = document.getElementById('menu-toggle'), nav = document.getElementById('site-nav');
+            function closeNav() { toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Open navigation menu'); nav.classList.remove('open'); }
+            toggle.addEventListener('click', () => { const opening = toggle.getAttribute('aria-expanded') !== 'true'; toggle.setAttribute('aria-expanded', String(opening)); toggle.setAttribute('aria-label', opening ? 'Close navigation menu' : 'Open navigation menu'); nav.classList.toggle('open', opening); });
+            const navLinks = [...nav.querySelectorAll('a')];
+            navLinks.forEach(link => link.addEventListener('click', closeNav));
+            const trackedSections = ['top', 'projects', 'skills', 'contact'].map(id => document.getElementById(id)).filter(Boolean);
+            let activeSectionFrame = 0;
+            function updateActiveSection() {
+                activeSectionFrame = 0;
+                const headerBottom = document.querySelector('.topbar').getBoundingClientRect().bottom;
+                const readingLine = headerBottom + Math.min(180, Math.max(105, (window.innerHeight - headerBottom) * .32));
+                let current = trackedSections[0], nearestDistance = Infinity;
+                for (const section of trackedSections) {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= readingLine && rect.bottom > readingLine) { current = section; nearestDistance = 0; break; }
+                    const distance = rect.top > readingLine ? rect.top - readingLine : readingLine - rect.bottom;
+                    if (distance < nearestDistance) { nearestDistance = distance; current = section; }
+                }
+                if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) current = trackedSections.at(-1);
+                navLinks.forEach(link => {
+                    if (link.getAttribute('href') === `#${current.id}`) link.setAttribute('aria-current', 'location');
+                    else link.removeAttribute('aria-current');
+                });
+            }
+            function scheduleActiveSection() { if (!activeSectionFrame) activeSectionFrame = requestAnimationFrame(updateActiveSection); }
+            window.addEventListener('scroll', scheduleActiveSection, { passive: true });
+            window.addEventListener('resize', scheduleActiveSection);
+            scheduleActiveSection();
+            document.addEventListener('click', event => { if (!event.target.closest('.topbar-inner')) closeNav(); });
+            document.addEventListener('keydown', event => { if (event.key === 'Escape') closeNav(); });
+
+            // Shared animated modal behavior, keyboard focus return, and focus trap.
+            function createModalController(modal, closeSelector, onClose = () => { }) {
+                const panel = modal.querySelector('[role="dialog"]');
+                const close = modal.querySelector(closeSelector);
+                let previousFocus = null, closingTimer = 0;
+                function open(from = document.activeElement) {
+                    clearTimeout(closingTimer); previousFocus = from;
+                    modal.classList.remove('closing'); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden'; close.focus();
+                }
+                function shut() {
+                    if (!modal.classList.contains('open')) return;
+                    modal.classList.remove('open'); modal.classList.add('closing'); modal.setAttribute('aria-hidden', 'true');
+                    clearTimeout(closingTimer); closingTimer = setTimeout(() => { modal.classList.remove('closing'); document.body.style.overflow = ''; (previousFocus?.isConnected ? previousFocus : null)?.focus({ preventScroll: true }); onClose(); }, 260);
+                }
+                close.addEventListener('click', shut);
+                modal.addEventListener('click', event => { if (event.target === modal) shut(); });
+                modal.addEventListener('keydown', event => {
+                    if (event.key === 'Escape') { event.preventDefault(); shut(); return; }
+                    if (event.key === 'Tab') {
+                        const focusable = [...panel.querySelectorAll('a[href],button:not([disabled]):not([hidden])')].filter(el => el.getClientRects().length);
+                        if (!focusable.length) return;
+                        const first = focusable[0], last = focusable[focusable.length - 1];
+                        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+                        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+                    }
+                });
+                return { open, close: shut, get isOpen() { return modal.classList.contains('open'); } };
+            }
+
+            // Project details use data-driven slides: every project may have its own carousel length.
+            const projectModal = document.getElementById('project-modal');
+            const projectController = createModalController(projectModal, '[data-close-project]');
+            const modalCover = document.getElementById('modal-cover-image');
+            const carouselImage = document.getElementById('carousel-image');
+            const carouselTitle = document.getElementById('carousel-title');
+            const carouselDescription = document.getElementById('carousel-description');
+            const carouselCount = document.getElementById('carousel-count');
+            const dots = document.getElementById('carousel-dots');
+            let activeProject = null, slideIndex = 0;
+            function renderSlide(index, animate = true) {
+                if (!activeProject) return;
+                const slides = activeProject.slides; slideIndex = (index + slides.length) % slides.length;
+                const slide = slides[slideIndex];
+                const update = () => {
+                    carouselImage.src = artData(activeProject, slide.title, slideIndex + 1);
+                    carouselImage.alt = `${activeProject.title}: ${slide.title}. ${slide.caption}`;
+                    carouselTitle.textContent = slide.title; carouselDescription.textContent = slide.caption;
+                    carouselCount.textContent = `${String(slideIndex + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+                    [...dots.children].forEach((dot, i) => dot.setAttribute('aria-current', String(i === slideIndex)));
+                    carouselImage.classList.remove('changing');
+                };
+                if (animate) { carouselImage.classList.add('changing'); setTimeout(update, 100); } else update();
+            }
+            function openProject(project, from) {
+                activeProject = project; slideIndex = 0;
+                document.getElementById('modal-project-kicker').textContent = `FIELD NOTES · ${project.category.toUpperCase()}`;
+                document.getElementById('modal-project-category').textContent = `${project.category} · ${project.year}`;
+                document.getElementById('modal-project-title').textContent = project.title;
+                document.getElementById('modal-project-copy').textContent = project.description;
+                modalCover.src = artData(project, project.title); modalCover.alt = `Enlarged pixel-art thumbnail for ${project.title}`;
+                const stack = document.getElementById('modal-stack'); stack.replaceChildren(...project.stack.map(label => { const tag = document.createElement('span'); tag.textContent = label; return tag; }));
+                const projectLink = document.getElementById('modal-project-link'); projectLink.href = project.link;
+                dots.replaceChildren(...project.slides.map((slide, index) => { const dot = document.createElement('button'); dot.type = 'button'; dot.className = 'carousel-dot'; dot.setAttribute('aria-label', `Show image ${index + 1}: ${slide.title}`); dot.setAttribute('aria-current', String(index === 0)); dot.addEventListener('click', () => renderSlide(index)); return dot; }));
+                renderSlide(0, false); projectController.open(from);
+            }
+            grid.addEventListener('click', event => { const card = event.target.closest('[data-project]'); if (card) { const project = projects.find(item => item.id === card.dataset.project); if (project) openProject(project, card); } });
+            document.getElementById('carousel-prev').addEventListener('click', () => renderSlide(slideIndex - 1));
+            document.getElementById('carousel-next').addEventListener('click', () => renderSlide(slideIndex + 1));
+            carouselImage.addEventListener('load', () => carouselImage.classList.remove('changing'));
+
+            // Flat top-down skill overworld: four-direction walking, no jumping or gravity.
+            const level = document.getElementById('overworld'), goblin = document.getElementById('goblin');
+            const gameStatus = document.getElementById('game-status'), xpLabel = document.getElementById('skill-xp');
+            const locations = [...level.querySelectorAll('.skill-location')];
+            const skillInfo = {
+                cpp: { kicker: 'TAVERN · SYSTEMS CRAFT', title: 'C++ · The Starlit Tavern', copy: 'A sturdy corner for performance-minded problem solving, lower-level concepts, and the joy of making every byte count.', items: ['Modern C++ foundations and object-oriented design', 'Memory, data structures, and debugging fundamentals', 'Building small, fast, maintainable tools'], xp: 18 },
+                python: { kicker: 'CAVE · AUTOMATION LAB', title: 'Python · The Curious Cave', copy: 'A quiet workshop for scripts, APIs, data wrangling, and turning a tedious process into a one-command ritual.', items: ['Python scripting, automation, and clean modules', 'REST APIs and server-side application patterns', 'Data processing, tests, and practical tooling'], xp: 22 },
+                web: { kicker: 'GREENHOUSE · FRONT-END', title: 'HTML & CSS · The Web Garden', copy: 'A living space for clear structure, responsive layouts, accessible interfaces, and just the right amount of visual magic.', items: ['Semantic HTML and accessible interaction patterns', 'Responsive CSS, design systems, and motion', 'Performance-minded, cross-device implementation'], xp: 20 },
+                javascript: { kicker: 'TOWER · INTERACTION MAGIC', title: 'JavaScript · The Signal Tower', copy: 'A high lookout for building lively interfaces and dependable product behavior, from small interactions to full-stack features.', items: ['Modern JavaScript and component-based UI', 'Async workflows, browser APIs, and state', 'Interactive prototypes and thoughtful UX details'], xp: 24 },
+                tools: { kicker: 'FORGE · TEAMWORK GUILD', title: 'Git & workflow · The Forge', copy: 'A place to shape reliable releases, make changes legible, and work well with the humans on the other side of the code.', items: ['Git, code review, and collaborative workflows', 'Testing, CI habits, and iterative delivery', 'Clear documentation and maintainable handoffs'], xp: 16 }
+            };
+            const skillModal = document.getElementById('skill-modal');
+            const skillController = createModalController(skillModal, '[data-close-skill]', () => {
+                if (skillState.active) skillState.ignore = skillState.active;
+                skillState.active = null; gameStatus.textContent = 'Back in the overworld. Keep exploring!';
+            });
+            const skillDirections = new Set();
+            const skillState = { x: 0, y: 0, active: null, ignore: null, xp: 0, last: 0, frame: 0 };
+            function placeGoblin() {
+                const bounds = level.getBoundingClientRect(); if (!bounds.width || !bounds.height) return;
+                if (!skillState.x) skillState.x = bounds.width * .5;
+                if (!skillState.y) skillState.y = bounds.height * .78;
+                const halfW = goblin.offsetWidth * .5, halfH = goblin.offsetHeight * .5;
+                skillState.x = Math.max(halfW, Math.min(bounds.width - halfW, skillState.x));
+                skillState.y = Math.max(49 + halfH, Math.min(bounds.height - halfH, skillState.y));
+                goblin.style.left = `${skillState.x}px`; goblin.style.top = `${skillState.y}px`;
+            }
+            function showSkill(id) {
+                const data = skillInfo[id]; if (!data || skillController.isOpen) return;
+                skillState.active = id; skillDirections.clear(); cancelAnimationFrame(skillState.frame); skillState.frame = 0; goblin.classList.remove('walking');
+                document.getElementById('skill-dialog-kicker').textContent = data.kicker;
+                document.getElementById('skill-dialog-title').textContent = data.title;
+                document.getElementById('skill-dialog-copy').textContent = data.copy;
+                document.getElementById('skill-dialog-list').replaceChildren(...data.items.map(text => { const li = document.createElement('li'); li.textContent = text; return li; }));
+                const status = document.getElementById('skill-dialog-status');
+                const landmark = locations.find(item => item.dataset.skill === id);
+                if (!landmark.dataset.discovered) { landmark.dataset.discovered = 'true'; skillState.xp += data.xp; xpLabel.textContent = String(skillState.xp).padStart(3, '0'); status.textContent = `SKILL LOGGED · +${data.xp} XP`; }
+                else status.textContent = 'Already in your skill log. Have another look around!';
+                skillController.open(level); gameStatus.textContent = `${data.title} discovered. Close the card to keep exploring.`;
+            }
+            function overlapCheck() {
+                const playerRect = goblin.getBoundingClientRect();
+                const found = locations.find(location => { const rect = location.getBoundingClientRect(); return playerRect.left < rect.right && playerRect.right > rect.left && playerRect.top < rect.bottom && playerRect.bottom > rect.top; });
+                if (found) { if (skillState.active !== found.dataset.skill && skillState.ignore !== found.dataset.skill) showSkill(found.dataset.skill); }
+                else { skillState.active = null; skillState.ignore = null; }
+            }
+            function runOverworld(now) {
+                skillState.frame = 0; if (skillController.isOpen || !skillDirections.size) return;
+                const delta = Math.min((now - skillState.last) / 16.667 || 1, 2); skillState.last = now;
+                const bounds = level.getBoundingClientRect();
+                const dx = Number(skillDirections.has('right')) - Number(skillDirections.has('left'));
+                const dy = Number(skillDirections.has('down')) - Number(skillDirections.has('up'));
+                const length = Math.hypot(dx, dy) || 1;
+                const step = 3.4 * delta;
+                const halfW = goblin.offsetWidth * .5, halfH = goblin.offsetHeight * .5;
+                skillState.x = Math.max(halfW, Math.min(bounds.width - halfW, skillState.x + (dx / length) * step));
+                skillState.y = Math.max(49 + halfH, Math.min(bounds.height - halfH, skillState.y + (dy / length) * step));
+                goblin.style.left = `${skillState.x}px`; goblin.style.top = `${skillState.y}px`;
+                goblin.classList.toggle('facing-left', dx < 0); goblin.classList.toggle('walking', dx !== 0 || dy !== 0);
+                overlapCheck();
+                if (skillDirections.size && !skillController.isOpen) skillState.frame = requestAnimationFrame(runOverworld);
+                else goblin.classList.remove('walking');
+            }
+            function startOverworld() { if (!skillState.frame && !skillController.isOpen) { skillState.last = performance.now(); skillState.frame = requestAnimationFrame(runOverworld); } }
+            function stopOverworld() { skillDirections.clear(); cancelAnimationFrame(skillState.frame); skillState.frame = 0; goblin.classList.remove('walking'); }
+            function setDirection(direction, pressed) {
+                if (pressed) { skillDirections.add(direction); startOverworld(); }
+                else { skillDirections.delete(direction); if (!skillDirections.size) { cancelAnimationFrame(skillState.frame); skillState.frame = 0; goblin.classList.remove('walking'); } }
+            }
+            const moveKeys = { ArrowLeft: 'left', a: 'left', A: 'left', ArrowRight: 'right', d: 'right', D: 'right', ArrowUp: 'up', w: 'up', W: 'up', ArrowDown: 'down', s: 'down', S: 'down' };
+            document.addEventListener('keydown', event => {
+                if (skillController.isOpen) return;
+                const focusedControl = event.target.closest?.('input,textarea,select,[contenteditable="true"],a,button');
+                if (focusedControl && !level.contains(focusedControl)) return;
+                const direction = moveKeys[event.key];
+                if (direction) { event.preventDefault(); setDirection(direction, true); }
+            });
+            document.addEventListener('keyup', event => { const direction = moveKeys[event.key]; if (direction) setDirection(direction, false); });
+            window.addEventListener('blur', stopOverworld);
+            window.addEventListener('resize', () => { placeGoblin(); overlapCheck(); });
+            level.addEventListener('pointerdown', event => { if (event.target === level || event.target.closest('.overworld-path,.water-pool,.overworld-bush')) level.focus({ preventScroll: true }); });
+            locations.forEach(location => location.addEventListener('click', () => { level.focus({ preventScroll: true }); showSkill(location.dataset.skill); }));
+            document.querySelectorAll('.mobile-controls button').forEach(button => {
+                const direction = button.dataset.control;
+                button.addEventListener('pointerdown', event => { event.preventDefault(); level.focus({ preventScroll: true }); setDirection(direction, true); });
+                button.addEventListener('pointerup', () => setDirection(direction, false)); button.addEventListener('pointerleave', () => setDirection(direction, false)); button.addEventListener('pointercancel', () => setDirection(direction, false));
+            });
+            placeGoblin();
+        })();
+    </script>
+</body>
+</html>
