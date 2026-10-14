@@ -1909,30 +1909,85 @@
             margin: 9px 10px 0;
         }
 
+            .slide-track.no-transition .slide-frame {
+                transition: none !important;
+            }
+
         .slide-frame {
             position: absolute;
             top: 0;
             bottom: 0;
             display: grid;
             place-items: center;
-            width: 78%;
+            width: 70%;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: left .56s cubic-bezier(.22,.8,.2,1), opacity .56s ease;
         }
 
             .slide-frame.previous {
-                left: 0;
-                transform: translateX(-50%);
+                left: -33%;
+                opacity: .55;
             }
 
             .slide-frame.current {
                 left: 50%;
-                transform: translateX(-50%);
-                z-index: 1;
+                z-index: 2;
             }
 
             .slide-frame.next {
-                left: 100%;
-                transform: translateX(-50%);
+                left: 133%;
+                opacity: .55;
             }
+
+                .slide-frame.previous img,
+                .slide-frame.next img {
+                    filter: grayscale(1) brightness(.58);
+                    opacity: .72;
+                    transition: filter .56s ease, opacity .56s ease;
+                }
+
+            .slide-frame.current img {
+                filter: none;
+                opacity: 1;
+                transition: filter .56s ease, opacity .56s ease;
+            }
+
+        .slide-track.is-next .slide-frame.previous {
+            left: -103%;
+        }
+
+        .slide-track.is-next .slide-frame.current {
+            left: -23%;
+        }
+
+        .slide-track.is-next .slide-frame.next {
+            left: 60%;
+        }
+
+        .slide-track.is-prev .slide-frame.previous {
+            left: 40%;
+        }
+
+        .slide-track.is-prev .slide-frame.current {
+            left: 123%;
+        }
+
+        .slide-track.is-prev .slide-frame.next {
+            left: 203%;
+        }
+
+        .slide-track.is-next .slide-frame.current img,
+        .slide-track.is-prev .slide-frame.current img {
+            filter: grayscale(1) brightness(.58);
+            opacity: .72;
+        }
+
+        .slide-track.is-next .slide-frame.next img,
+        .slide-track.is-prev .slide-frame.previous img {
+            filter: none;
+            opacity: 1;
+        }
 
         .slide-view img {
             display: block;
@@ -1942,20 +1997,11 @@
             object-fit: cover;
             border: 1px solid #695483;
             box-shadow: 0 4px 12px rgba(0,0,0,.35);
-            transition: opacity .16s,transform .16s;
             pointer-events: none;
         }
 
-            .slide-view img.changing {
-                opacity: .2;
-            }
-
         .slide-caption {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            padding: 9px 11px;
+            padding: 8px 11px 3px;
             color: #c9bfd9;
             font-size: 8px;
         }
@@ -2347,6 +2393,42 @@
             .slide-view img {
                 aspect-ratio: 1.7;
             }
+
+            .slide-frame {
+                width: 66%;
+            }
+
+                .slide-frame.previous {
+                    left: -34%;
+                }
+
+                .slide-frame.next {
+                    left: 134%;
+                }
+
+            .slide-track.is-next .slide-frame.previous {
+                left: -91%;
+            }
+
+            .slide-track.is-next .slide-frame.current {
+                left: -25%;
+            }
+
+            .slide-track.is-next .slide-frame.next {
+                left: 58%;
+            }
+
+            .slide-track.is-prev .slide-frame.previous {
+                left: 42%;
+            }
+
+            .slide-track.is-prev .slide-frame.current {
+                left: 125%;
+            }
+
+            .slide-track.is-prev .slide-frame.next {
+                left: 191%;
+            }
         }
         /* Readable pixel UI: decorative labels remain compact, but body copy and controls stay comfortable. */
         .nav-links a {
@@ -2609,11 +2691,10 @@
                     <div class="carousel-head"><h3>More from this build</h3><span class="carousel-count" id="carousel-count" aria-live="polite"></span></div>
                     <div class="slide-view" id="slide-view" role="region" aria-label="Project images. Swipe horizontally to browse.">
                         <div class="slide-track" id="slide-track">
-                            <div class="slide-frame previous" aria-hidden="true"><img id="carousel-prev-image" alt=""></div>
-                            <div class="slide-frame current"><img id="carousel-image" alt=""></div>
-                            <div class="slide-frame next" aria-hidden="true"><img id="carousel-next-image" alt=""></div>
+                            <div class="slide-frame previous" aria-hidden="true"><img alt=""></div>
+                            <div class="slide-frame current"><img alt=""></div>
+                            <div class="slide-frame next" aria-hidden="true"><img alt=""></div>
                         </div>
-                        <div class="slide-caption"><span id="carousel-title"></span><span id="carousel-description"></span></div>
                     </div>
                     <div class="carousel-controls"><button class="carousel-arrow" id="carousel-prev" type="button" aria-label="Previous project image">←</button><div class="carousel-dots" id="carousel-dots" aria-label="Choose project image"></div><button class="carousel-arrow" id="carousel-next" type="button" aria-label="Next project image">→</button></div>
                 </div>
@@ -2637,10 +2718,10 @@
         description: 'A browser-based pixel animation studio designed to make a focused creative workflow feel joyful. I built the timeline, frame tools, palette controls, and export flow with an emphasis on keyboard access and fast feedback.',
         stack: ['TypeScript', 'Canvas API', 'Web Components'], colors: ['#212347', '#7f5bb4', '#ffb869', '#80e2c1'], symbol: '✦',
         slides: [
-        { title: 'The frame editor', caption: 'A compact, keyboard-friendly canvas.' },
-        { title: 'Palette lab', caption: 'Reusable color sets for tiny worlds.' },
-        { title: 'Animation timeline', caption: 'Scrub, reorder, and preview each frame.' },
-        { title: 'Export panel', caption: 'Optimized spritesheets, ready to ship.' }
+        { title: 'The frame editor' },
+        { title: 'Palette lab' },
+        { title: 'Animation timeline' },
+        { title: 'Export panel' }
         ], link: 'https://github.com/'
         },
         {
@@ -2648,9 +2729,9 @@
         description: 'A responsive field dashboard for conservation teams. The experience brings location data, observations, and trends together in a map-led interface, with low-bandwidth states and clear visual summaries for field use.',
         stack: ['Python', 'Django', 'PostgreSQL', 'MapLibre'], colors: ['#163d3d', '#458b6a', '#bdd88a', '#f1bd73'], symbol: '✿',
         slides: [
-        { title: 'The living map', caption: 'Habitat signals at a glance.' },
-        { title: 'Field observations', caption: 'Fast entry, even with muddy boots.' },
-        { title: 'Seasonal patterns', caption: 'Make long-term change easy to see.' }
+        { title: 'The living map' },
+        { title: 'Field observations' },
+        { title: 'Seasonal patterns' }
         ], link: 'https://github.com/'
         },
         {
@@ -2658,11 +2739,11 @@
         description: 'A deliberately quiet note-taking app built around local-first data and fast search. I designed the visual language, implemented sync-safe storage and command shortcuts, and tuned the interface to stay out of the way.',
         stack: ['JavaScript', 'IndexedDB', 'Vite', 'CSS'], colors: ['#281f4c', '#6556a6', '#e38ca2', '#ffd779'], symbol: '☾',
         slides: [
-        { title: 'A softer home screen', caption: 'Recent notes without the noise.' },
-        { title: 'Quick capture', caption: 'An idea saved in a single keystroke.' },
-        { title: 'Search by constellation', caption: 'Find the thought you almost forgot.' },
-        { title: 'Offline by design', caption: 'Your notes stay yours, everywhere.' },
-        { title: 'The tiny details', caption: 'Small affordances, considered carefully.' }
+        { title: 'A softer home screen' },
+        { title: 'Quick capture' },
+        { title: 'Search by constellation' },
+        { title: 'Offline by design' },
+        { title: 'The tiny details' }
         ], link: 'https://github.com/'
         }
         ];
@@ -2845,36 +2926,71 @@
         // Project details use data-driven slides: every project may have its own carousel length.
         const projectModal = document.getElementById('project-modal');
         const projectController = createModalController(projectModal, '[data-close-project]');
+        const projectPanel = projectModal.querySelector('.modal-panel');
         const modalCover = document.getElementById('modal-cover-image');
-        const carouselImage = document.getElementById('carousel-image');
-        const carouselTitle = document.getElementById('carousel-title');
-        const carouselDescription = document.getElementById('carousel-description');
         const carouselCount = document.getElementById('carousel-count');
         const dots = document.getElementById('carousel-dots');
-        const carouselPrevImage = document.getElementById('carousel-prev-image');
-        const carouselNextImage = document.getElementById('carousel-next-image');
         const slideView = document.getElementById('slide-view');
-        let activeProject = null, slideIndex = 0, slideUpdateTimer = 0, swipeStart = null;
-        function renderSlide(index, animate = true) {
-        if (!activeProject) return;
+        const slideTrack = document.getElementById('slide-track');
+        let activeProject = null, slideIndex = 0, slideTransitionTimer = 0, swipeStart = null, slideAnimating = false;
+        function updateSlideFrames() {
         const slides = activeProject.slides;
-        slideIndex = (index + slides.length) % slides.length;
-        const current = slides[slideIndex];
-        const previousIndex = (slideIndex - 1 + slides.length) % slides.length;
-        const nextIndex = (slideIndex + 1) % slides.length;
-        const previous = slides[previousIndex], next = slides[nextIndex];
-        const update = () => {
-        carouselPrevImage.src = artData(activeProject, previous.title, previousIndex + 1);
-        carouselNextImage.src = artData(activeProject, next.title, nextIndex + 1);
-        carouselImage.src = artData(activeProject, current.title, slideIndex + 1);
-        carouselImage.alt = `${activeProject.title}: ${current.title}. ${current.caption}`;
-        carouselTitle.textContent = current.title; carouselDescription.textContent = current.caption;
+        const indices = {
+        previous: (slideIndex - 1 + slides.length) % slides.length,
+        current: slideIndex,
+        next: (slideIndex + 1) % slides.length
+        };
+        for (const [position, index] of Object.entries(indices)) {
+        const frame = slideTrack.querySelector(`.slide-frame.${position}`);
+        const image = frame.querySelector('img');
+        const slide = slides[index];
+        image.src = artData(activeProject, slide.title, index + 1);
+        image.alt = position === 'current' ? `${activeProject.title}: ${slide.title}` : '';
+        }
         carouselCount.textContent = `${String(slideIndex + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
         [...dots.children].forEach((dot, i) => dot.setAttribute('aria-current', String(i === slideIndex)));
-        carouselImage.classList.remove('changing');
-        };
-        clearTimeout(slideUpdateTimer);
-        if (animate) { carouselImage.classList.add('changing'); slideUpdateTimer = setTimeout(update, 100); } else update();
+        }
+        function rotateSlideFrames(direction) {
+        const previous = slideTrack.querySelector('.slide-frame.previous');
+        const current = slideTrack.querySelector('.slide-frame.current');
+        const next = slideTrack.querySelector('.slide-frame.next');
+        if (direction === 'next') {
+        previous.className = 'slide-frame next';
+        current.className = 'slide-frame previous';
+        next.className = 'slide-frame current';
+        } else {
+        previous.className = 'slide-frame current';
+        current.className = 'slide-frame next';
+        next.className = 'slide-frame previous';
+        }
+        slideTrack.classList.remove('is-next', 'is-prev');
+        slideTrack.classList.add('no-transition');
+        updateSlideFrames();
+        requestAnimationFrame(() => slideTrack.classList.remove('no-transition'));
+        }
+        function renderSlide(index, animate = true) {
+        if (!activeProject || slideAnimating) return;
+        const slides = activeProject.slides;
+        const targetIndex = (index + slides.length) % slides.length;
+        if (targetIndex === slideIndex) return;
+        const forward = (targetIndex - slideIndex + slides.length) % slides.length;
+        const isAdjacent = forward === 1 || forward === slides.length - 1;
+        if (!animate || !isAdjacent) {
+        slideIndex = targetIndex;
+        updateSlideFrames();
+        return;
+        }
+        const direction = forward === 1 ? 'next' : 'prev';
+        slideAnimating = true;
+        slideTrack.classList.remove('is-next', 'is-prev');
+        void slideTrack.offsetWidth;
+        slideTrack.classList.add(direction === 'next' ? 'is-next' : 'is-prev');
+        slideIndex = targetIndex;
+        clearTimeout(slideTransitionTimer);
+        slideTransitionTimer = setTimeout(() => {
+        rotateSlideFrames(direction);
+        slideAnimating = false;
+        }, 580);
         }
         slideView.addEventListener('pointerdown', event => {
         if (event.pointerType === 'mouse' && event.button !== 0) return;
@@ -2891,7 +3007,9 @@
         slideView.addEventListener('pointercancel', () => { swipeStart = null; });
         slideView.addEventListener('lostpointercapture', () => { swipeStart = null; });
         function openProject(project, from) {
-        activeProject = project; slideIndex = 0;
+        activeProject = project; slideIndex = 0; slideAnimating = false;
+        clearTimeout(slideTransitionTimer);
+        slideTrack.classList.remove('is-next', 'is-prev', 'no-transition');
         document.getElementById('modal-project-kicker').textContent = `FIELD NOTES · ${project.category.toUpperCase()}`;
         document.getElementById('modal-project-category').textContent = `${project.category} · ${project.year}`;
         document.getElementById('modal-project-title').textContent = project.title;
@@ -2900,12 +3018,13 @@
         const stack = document.getElementById('modal-stack'); stack.replaceChildren(...project.stack.map(label => { const tag = document.createElement('span'); tag.textContent = label; return tag; }));
         const projectLink = document.getElementById('modal-project-link'); projectLink.href = project.link;
         dots.replaceChildren(...project.slides.map((slide, index) => { const dot = document.createElement('button'); dot.type = 'button'; dot.className = 'carousel-dot'; dot.setAttribute('aria-label', `Show image ${index + 1}: ${slide.title}`); dot.setAttribute('aria-current', String(index === 0)); dot.addEventListener('click', () => renderSlide(index)); return dot; }));
-        renderSlide(0, false); projectController.open(from);
+        updateSlideFrames();
+        projectController.open(from);
+        projectPanel.scrollTop = 0;
         }
         grid.addEventListener('click', event => { const card = event.target.closest('[data-project]'); if (card) { const project = projects.find(item => item.id === card.dataset.project); if (project) openProject(project, card); } });
         document.getElementById('carousel-prev').addEventListener('click', () => renderSlide(slideIndex - 1));
         document.getElementById('carousel-next').addEventListener('click', () => renderSlide(slideIndex + 1));
-        carouselImage.addEventListener('load', () => carouselImage.classList.remove('changing'));
 
         // Flat top-down skill overworld: four-direction walking, no jumping or gravity.
         const level = document.getElementById('overworld'), goblin = document.getElementById('goblin');
