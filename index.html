@@ -1261,7 +1261,7 @@
                 width: 21px;
                 height: 13px;
                 background: #cc795f;
-                box-shadow: 0 5px #745078,-3px 4px #ffd36c,20px 4px #ffd36c;
+            
             }
 
             .goblin .feet {
@@ -1905,8 +1905,8 @@
 
         .slide-track {
             position: relative;
-            height: clamp(112px, 22vw, 190px);
-            margin: 9px 10px 0;
+            height: clamp(170px, 22vw, 380px);
+            margin: 0px 10px 0;
         }
 
             .slide-track.no-transition .slide-frame {
@@ -1926,7 +1926,7 @@
         }
 
             .slide-frame.previous {
-                left: -33%;
+                left: -30%;
                 opacity: .55;
             }
 
@@ -1936,7 +1936,7 @@
             }
 
             .slide-frame.next {
-                left: 133%;
+                left: 130%;
                 opacity: .55;
             }
 
@@ -1992,7 +1992,7 @@
         .slide-view img {
             display: block;
             width: 100%;
-            max-height: 275px;
+            max-height: 300px;
             aspect-ratio: 2.2;
             object-fit: cover;
             border: 1px solid #695483;
@@ -3019,7 +3019,7 @@
         const projectLink = document.getElementById('modal-project-link'); projectLink.href = project.link;
         dots.replaceChildren(...project.slides.map((slide, index) => { const dot = document.createElement('button'); dot.type = 'button'; dot.className = 'carousel-dot'; dot.setAttribute('aria-label', `Show image ${index + 1}: ${slide.title}`); dot.setAttribute('aria-current', String(index === 0)); dot.addEventListener('click', () => renderSlide(index)); return dot; }));
         updateSlideFrames();
-        projectController.open(from);
+        projectController.open(level);
         projectPanel.scrollTop = 0;
         }
         grid.addEventListener('click', event => { const card = event.target.closest('[data-project]'); if (card) { const project = projects.find(item => item.id === card.dataset.project); if (project) openProject(project, card); } });
