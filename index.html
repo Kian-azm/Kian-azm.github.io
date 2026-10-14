@@ -1281,9 +1281,106 @@
                 animation: goblin-step .14s steps(2,end) infinite alternate;
             }
 
+            /* Small, frame-stepped idle poses keep the goblin lively without moving its hitbox. */
+            .goblin:not(.walking) .head {
+                animation: goblin-idle-head 1.8s steps(4,end) infinite;
+            }
+
+            .goblin:not(.walking) .eyes {
+                animation: goblin-idle-blink 3.6s steps(2,end) infinite;
+            }
+
+            .goblin:not(.walking) .ear:not(.right) {
+                animation: goblin-idle-ear-left 2.4s steps(3,end) infinite;
+            }
+
+            .goblin:not(.walking) .ear.right {
+                animation: goblin-idle-ear-right 2.4s steps(3,end) infinite;
+            }
+
+            .goblin:not(.walking) .tunic {
+                animation: goblin-idle-breathe 1.8s steps(2,end) infinite;
+            }
+
+            .goblin:not(.walking) .feet {
+                animation: goblin-idle-feet 1.8s steps(2,end) infinite;
+            }
+
         @keyframes goblin-step {
             to {
                 transform: translateY(-3px);
+            }
+        }
+
+        @keyframes goblin-idle-head {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+
+            25%, 45% {
+                transform: translateY(-1px);
+            }
+
+            80% {
+                transform: translateY(1px);
+            }
+        }
+
+        @keyframes goblin-idle-blink {
+            0%, 42%, 48%, 90%, 96%, 100% {
+                height: 3px;
+            }
+
+            45%, 93% {
+                height: 1px;
+            }
+        }
+
+        @keyframes goblin-idle-ear-left {
+            0%, 70%, 100% {
+                transform: rotate(0);
+            }
+
+            35% {
+                transform: rotate(-8deg);
+            }
+
+            45% {
+                transform: rotate(4deg);
+            }
+        }
+
+        @keyframes goblin-idle-ear-right {
+            0%, 70%, 100% {
+                transform: scaleX(-1) rotate(0);
+            }
+
+            35% {
+                transform: scaleX(-1) rotate(-8deg);
+            }
+
+            45% {
+                transform: scaleX(-1) rotate(4deg);
+            }
+        }
+
+        @keyframes goblin-idle-breathe {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(1px);
+            }
+        }
+
+        @keyframes goblin-idle-feet {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-1px);
             }
         }
 
@@ -1296,7 +1393,8 @@
             border: 2px solid #68517e;
             background: radial-gradient(ellipse at 50% 48%,#566d5d 0,#395646 49%,#263c43 100%);
             box-shadow: 8px 8px 0 rgba(10,7,23,.75),9px 9px 0 #594675;
-            touch-action: none;
+            /* Allow native vertical page scrolling when a touch starts on the map. */
+            touch-action: pan-y;
         }
 
             .overworld:focus-visible {
@@ -1801,20 +1899,56 @@
             overflow: hidden;
             border: 1px solid #514264;
             background: #100d24;
+            touch-action: pan-y;
+            user-select: none;
         }
 
-            .slide-view img {
-                display: block;
-                width: 100%;
-                max-height: 275px;
-                aspect-ratio: 2.2;
-                object-fit: cover;
-                transition: opacity .16s;
+        .slide-track {
+            position: relative;
+            height: clamp(112px, 22vw, 190px);
+            margin: 9px 10px 0;
+        }
+
+        .slide-frame {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            display: grid;
+            place-items: center;
+            width: 78%;
+        }
+
+            .slide-frame.previous {
+                left: 0;
+                transform: translateX(-50%);
             }
 
-                .slide-view img.changing {
-                    opacity: .2;
-                }
+            .slide-frame.current {
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 1;
+            }
+
+            .slide-frame.next {
+                left: 100%;
+                transform: translateX(-50%);
+            }
+
+        .slide-view img {
+            display: block;
+            width: 100%;
+            max-height: 275px;
+            aspect-ratio: 2.2;
+            object-fit: cover;
+            border: 1px solid #695483;
+            box-shadow: 0 4px 12px rgba(0,0,0,.35);
+            transition: opacity .16s,transform .16s;
+            pointer-events: none;
+        }
+
+            .slide-view img.changing {
+                opacity: .2;
+            }
 
         .slide-caption {
             display: flex;
@@ -2449,7 +2583,7 @@
                 <button class="skill-location" style="--x:72%;--y:73%" data-skill="tools" type="button" aria-label="Git forge. Walk into it for tools and workflow skill details."><span class="skill-object forge" aria-hidden="true"><i></i></span><span class="skill-label">GIT FORGE</span></button>
                 <div class="goblin" id="goblin" aria-hidden="true"><i class="ear"></i><i class="ear right"></i><i class="head"></i><i class="hair"></i><b class="eyes"></b><i class="tunic"></i><em class="feet"></em></div>
             </div>
-            <div class="game-message"><span id="game-status" aria-live="polite">The goblin is ready. Focus the map and start exploring!</span><span>ARROWS / WASD · ESC CLOSES MENUS</span></div>
+            <div class="game-message"><span id="game-status" aria-live="polite">The goblin is ready. Focus the map and start exploring!</span><span>ARROWS / WASD · TAP × TO CLOSE SKILL CARD</span></div>
             <div class="mobile-controls" aria-label="Overworld movement controls"><button type="button" data-control="up" aria-label="Move up">▲</button><button type="button" data-control="left" aria-label="Move left">◀</button><button type="button" data-control="down" aria-label="Move down">▼</button><button type="button" data-control="right" aria-label="Move right">▶</button></div>
         </section>
     </main>
@@ -2473,7 +2607,14 @@
                 </div>
                 <div class="carousel" aria-label="Project image carousel">
                     <div class="carousel-head"><h3>More from this build</h3><span class="carousel-count" id="carousel-count" aria-live="polite"></span></div>
-                    <div class="slide-view"><img id="carousel-image" alt=""><div class="slide-caption"><span id="carousel-title"></span><span id="carousel-description"></span></div></div>
+                    <div class="slide-view" id="slide-view" role="region" aria-label="Project images. Swipe horizontally to browse.">
+                        <div class="slide-track" id="slide-track">
+                            <div class="slide-frame previous" aria-hidden="true"><img id="carousel-prev-image" alt=""></div>
+                            <div class="slide-frame current"><img id="carousel-image" alt=""></div>
+                            <div class="slide-frame next" aria-hidden="true"><img id="carousel-next-image" alt=""></div>
+                        </div>
+                        <div class="slide-caption"><span id="carousel-title"></span><span id="carousel-description"></span></div>
+                    </div>
                     <div class="carousel-controls"><button class="carousel-arrow" id="carousel-prev" type="button" aria-label="Previous project image">←</button><div class="carousel-dots" id="carousel-dots" aria-label="Choose project image"></div><button class="carousel-arrow" id="carousel-next" type="button" aria-label="Next project image">→</button></div>
                 </div>
             </div>
@@ -2483,350 +2624,377 @@
     <div class="modal" id="skill-modal" aria-hidden="true">
         <section class="modal-panel skill-dialog" role="dialog" aria-modal="true" aria-labelledby="skill-dialog-title" aria-describedby="skill-dialog-copy">
             <div class="modal-top"><span class="modal-kicker" id="skill-dialog-kicker">SKILL FOUND · INVENTORY</span><button class="close-button" type="button" data-close-skill aria-label="Close skill details">×</button></div>
-            <h2 id="skill-dialog-title">Skill unlocked</h2><p id="skill-dialog-copy"></p><ul id="skill-dialog-list"></ul><p class="skill-status" id="skill-dialog-status" aria-live="polite"></p><p class="skill-modal-hint">ESC · CLOSE MENU · CLOSE TO KEEP EXPLORING</p>
+            <h2 id="skill-dialog-title">Skill unlocked</h2><p id="skill-dialog-copy"></p><ul id="skill-dialog-list"></ul><p class="skill-status" id="skill-dialog-status" aria-live="polite"></p><p class="skill-modal-hint">SELECT × · CLOSE CARD · KEEP EXPLORING</p>
         </section>
     </div>
 
     <div class="crt" aria-hidden="true"></div>
     <script>
         (() => {
-            const projects = [
-                {
-                    id: 'spriteforge', title: 'SpriteForge', category: 'Creative tooling', year: '2025', blurb: 'A tiny animation workbench for people who think in pixels.',
-                    description: 'A browser-based pixel animation studio designed to make a focused creative workflow feel joyful. I built the timeline, frame tools, palette controls, and export flow with an emphasis on keyboard access and fast feedback.',
-                    stack: ['TypeScript', 'Canvas API', 'Web Components'], colors: ['#212347', '#7f5bb4', '#ffb869', '#80e2c1'], symbol: '✦',
-                    slides: [
-                        { title: 'The frame editor', caption: 'A compact, keyboard-friendly canvas.' },
-                        { title: 'Palette lab', caption: 'Reusable color sets for tiny worlds.' },
-                        { title: 'Animation timeline', caption: 'Scrub, reorder, and preview each frame.' },
-                        { title: 'Export panel', caption: 'Optimized spritesheets, ready to ship.' }
-                    ], link: 'https://github.com/'
-                },
-                {
-                    id: 'mossmetric', title: 'Moss & Metric', category: 'Data + environment', year: '2024', blurb: 'A map-first dashboard that turns habitat data into action.',
-                    description: 'A responsive field dashboard for conservation teams. The experience brings location data, observations, and trends together in a map-led interface, with low-bandwidth states and clear visual summaries for field use.',
-                    stack: ['Python', 'Django', 'PostgreSQL', 'MapLibre'], colors: ['#163d3d', '#458b6a', '#bdd88a', '#f1bd73'], symbol: '✿',
-                    slides: [
-                        { title: 'The living map', caption: 'Habitat signals at a glance.' },
-                        { title: 'Field observations', caption: 'Fast entry, even with muddy boots.' },
-                        { title: 'Seasonal patterns', caption: 'Make long-term change easy to see.' }
-                    ], link: 'https://github.com/'
-                },
-                {
-                    id: 'orbitnotes', title: 'Orbit Notes', category: 'Productivity', year: '2023', blurb: 'A calm, offline-first notebook for thoughts in motion.',
-                    description: 'A deliberately quiet note-taking app built around local-first data and fast search. I designed the visual language, implemented sync-safe storage and command shortcuts, and tuned the interface to stay out of the way.',
-                    stack: ['JavaScript', 'IndexedDB', 'Vite', 'CSS'], colors: ['#281f4c', '#6556a6', '#e38ca2', '#ffd779'], symbol: '☾',
-                    slides: [
-                        { title: 'A softer home screen', caption: 'Recent notes without the noise.' },
-                        { title: 'Quick capture', caption: 'An idea saved in a single keystroke.' },
-                        { title: 'Search by constellation', caption: 'Find the thought you almost forgot.' },
-                        { title: 'Offline by design', caption: 'Your notes stay yours, everywhere.' },
-                        { title: 'The tiny details', caption: 'Small affordances, considered carefully.' }
-                    ], link: 'https://github.com/'
-                }
-            ];
+        const projects = [
+        {
+        id: 'spriteforge', title: 'SpriteForge', category: 'Creative tooling', year: '2025', blurb: 'A tiny animation workbench for people who think in pixels.',
+        description: 'A browser-based pixel animation studio designed to make a focused creative workflow feel joyful. I built the timeline, frame tools, palette controls, and export flow with an emphasis on keyboard access and fast feedback.',
+        stack: ['TypeScript', 'Canvas API', 'Web Components'], colors: ['#212347', '#7f5bb4', '#ffb869', '#80e2c1'], symbol: '✦',
+        slides: [
+        { title: 'The frame editor', caption: 'A compact, keyboard-friendly canvas.' },
+        { title: 'Palette lab', caption: 'Reusable color sets for tiny worlds.' },
+        { title: 'Animation timeline', caption: 'Scrub, reorder, and preview each frame.' },
+        { title: 'Export panel', caption: 'Optimized spritesheets, ready to ship.' }
+        ], link: 'https://github.com/'
+        },
+        {
+        id: 'mossmetric', title: 'Moss & Metric', category: 'Data + environment', year: '2024', blurb: 'A map-first dashboard that turns habitat data into action.',
+        description: 'A responsive field dashboard for conservation teams. The experience brings location data, observations, and trends together in a map-led interface, with low-bandwidth states and clear visual summaries for field use.',
+        stack: ['Python', 'Django', 'PostgreSQL', 'MapLibre'], colors: ['#163d3d', '#458b6a', '#bdd88a', '#f1bd73'], symbol: '✿',
+        slides: [
+        { title: 'The living map', caption: 'Habitat signals at a glance.' },
+        { title: 'Field observations', caption: 'Fast entry, even with muddy boots.' },
+        { title: 'Seasonal patterns', caption: 'Make long-term change easy to see.' }
+        ], link: 'https://github.com/'
+        },
+        {
+        id: 'orbitnotes', title: 'Orbit Notes', category: 'Productivity', year: '2023', blurb: 'A calm, offline-first notebook for thoughts in motion.',
+        description: 'A deliberately quiet note-taking app built around local-first data and fast search. I designed the visual language, implemented sync-safe storage and command shortcuts, and tuned the interface to stay out of the way.',
+        stack: ['JavaScript', 'IndexedDB', 'Vite', 'CSS'], colors: ['#281f4c', '#6556a6', '#e38ca2', '#ffd779'], symbol: '☾',
+        slides: [
+        { title: 'A softer home screen', caption: 'Recent notes without the noise.' },
+        { title: 'Quick capture', caption: 'An idea saved in a single keystroke.' },
+        { title: 'Search by constellation', caption: 'Find the thought you almost forgot.' },
+        { title: 'Offline by design', caption: 'Your notes stay yours, everywhere.' },
+        { title: 'The tiny details', caption: 'Small affordances, considered carefully.' }
+        ], link: 'https://github.com/'
+        }
+        ];
 
-            const esc = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
-            function artData(project, title, index = 0) {
-                const [dark, mid, warm, cool] = project.colors;
-                const shift = index * 17;
-                const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 540" role="img"><defs><linearGradient id="g" x2="0" y2="1"><stop stop-color="${dark}"/><stop offset="1" stop-color="${mid}"/></linearGradient><pattern id="p" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0v32" fill="none" stroke="#fff" stroke-opacity=".08"/></pattern></defs><path fill="url(#g)" d="M0 0h920v540H0z"/><path fill="url(#p)" d="M0 0h920v540H0z"/><circle cx="${735 - shift}" cy="105" r="76" fill="${warm}" opacity=".88"/><path d="M0 374 160 245l134 110 162-179 170 176 115-119 179 144v163H0z" fill="${dark}" opacity=".82"/><path d="M0 442 181 351l133 77 182-139 163 114 138-83 123 76v144H0z" fill="${cool}" opacity=".7"/><rect x="${170 + shift}" y="128" width="470" height="270" rx="8" fill="#100d24" fill-opacity=".82" stroke="#fff" stroke-opacity=".46" stroke-width="3"/><rect x="${188 + shift}" y="146" width="434" height="228" fill="${dark}" stroke="${warm}" stroke-opacity=".65" stroke-width="2"/><path d="M${212 + shift} 326h105v-69h80v44h108v-90h89v113H${212 + shift}z" fill="${cool}" opacity=".92"/><path d="M${212 + shift} 302h44v-81h42v81h63v-53h46v53h45v-115h43v115h92" fill="none" stroke="${warm}" stroke-width="7" stroke-linejoin="round"/><circle cx="${266 + shift}" cy="196" r="9" fill="${warm}"/><circle cx="${466 + shift}" cy="217" r="8" fill="#fff0c3"/><text x="${460 + shift / 3}" y="${273 + shift / 3}" fill="#fff0c3" font-family="monospace" font-size="68" text-anchor="middle" opacity=".88">${esc(project.symbol)}</text><rect x="${187 + shift}" y="146" width="434" height="28" fill="#100d24"/><circle cx="${201 + shift}" cy="160" r="4" fill="#ff7e8a"/><circle cx="${216 + shift}" cy="160" r="4" fill="#ffd66e"/><circle cx="${231 + shift}" cy="160" r="4" fill="#81f2c0"/><text x="54" y="476" fill="#fff0c3" font-family="monospace" font-size="24" letter-spacing="6">${esc(title.toUpperCase()).slice(0, 38)}</text><text x="55" y="510" fill="#fff" fill-opacity=".68" font-family="monospace" font-size="12" letter-spacing="3">ALEX MORGAN · SELECTED WORK</text></svg>`;
-                return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-            }
+        const esc = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+        function artData(project, title, index = 0) {
+        const [dark, mid, warm, cool] = project.colors;
+        const shift = index * 17;
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 540" role="img"><defs><linearGradient id="g" x2="0" y2="1"><stop stop-color="${dark}"/><stop offset="1" stop-color="${mid}"/></linearGradient><pattern id="p" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0v32" fill="none" stroke="#fff" stroke-opacity=".08"/></pattern></defs><path fill="url(#g)" d="M0 0h920v540H0z"/><path fill="url(#p)" d="M0 0h920v540H0z"/><circle cx="${735 - shift}" cy="105" r="76" fill="${warm}" opacity=".88"/><path d="M0 374 160 245l134 110 162-179 170 176 115-119 179 144v163H0z" fill="${dark}" opacity=".82"/><path d="M0 442 181 351l133 77 182-139 163 114 138-83 123 76v144H0z" fill="${cool}" opacity=".7"/><rect x="${170 + shift}" y="128" width="470" height="270" rx="8" fill="#100d24" fill-opacity=".82" stroke="#fff" stroke-opacity=".46" stroke-width="3"/><rect x="${188 + shift}" y="146" width="434" height="228" fill="${dark}" stroke="${warm}" stroke-opacity=".65" stroke-width="2"/><path d="M${212 + shift} 326h105v-69h80v44h108v-90h89v113H${212 + shift}z" fill="${cool}" opacity=".92"/><path d="M${212 + shift} 302h44v-81h42v81h63v-53h46v53h45v-115h43v115h92" fill="none" stroke="${warm}" stroke-width="7" stroke-linejoin="round"/><circle cx="${266 + shift}" cy="196" r="9" fill="${warm}"/><circle cx="${466 + shift}" cy="217" r="8" fill="#fff0c3"/><text x="${460 + shift / 3}" y="${273 + shift / 3}" fill="#fff0c3" font-family="monospace" font-size="68" text-anchor="middle" opacity=".88">${esc(project.symbol)}</text><rect x="${187 + shift}" y="146" width="434" height="28" fill="#100d24"/><circle cx="${201 + shift}" cy="160" r="4" fill="#ff7e8a"/><circle cx="${216 + shift}" cy="160" r="4" fill="#ffd66e"/><circle cx="${231 + shift}" cy="160" r="4" fill="#81f2c0"/><text x="54" y="476" fill="#fff0c3" font-family="monospace" font-size="24" letter-spacing="6">${esc(title.toUpperCase()).slice(0, 38)}</text><text x="55" y="510" fill="#fff" fill-opacity=".68" font-family="monospace" font-size="12" letter-spacing="3">ALEX MORGAN · SELECTED WORK</text></svg>`;
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+        }
 
-            const grid = document.getElementById('projects-grid');
-            projects.forEach(project => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'project-card';
-                button.dataset.project = project.id;
-                button.setAttribute('aria-label', `Open ${project.title} project details`);
-                button.innerHTML = `<span class="project-thumb"><img src="${artData(project, project.title)}" alt="Pixel-art interface concept for ${esc(project.title)}"><span class="project-open">Open field notes ↗</span></span><span class="project-info"><span class="project-meta"><span>${esc(project.category)}</span><span>${esc(project.year)}</span></span><span class="project-title">${esc(project.title)}</span><span class="project-blurb">${esc(project.blurb)}</span><span class="tag-list">${project.stack.slice(0, 3).map(tag => `<span class="tag">${esc(tag)}</span>`).join('')}</span></span>`;
-                grid.append(button);
-            });
+        const grid = document.getElementById('projects-grid');
+        projects.forEach(project => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'project-card';
+        button.dataset.project = project.id;
+        button.setAttribute('aria-label', `Open ${project.title} project details`);
+        button.innerHTML = `<span class="project-thumb"><img src="${artData(project, project.title)}" alt="Pixel-art interface concept for ${esc(project.title)}"><span class="project-open">Open field notes ↗</span></span><span class="project-info"><span class="project-meta"><span>${esc(project.category)}</span><span>${esc(project.year)}</span></span><span class="project-title">${esc(project.title)}</span><span class="project-blurb">${esc(project.blurb)}</span><span class="tag-list">${project.stack.slice(0, 3).map(tag => `<span class="tag">${esc(tag)}</span>`).join('')}</span></span>`;
+        grid.append(button);
+        });
 
-            // Scroll-reactive pixel magic; particle positions drift at a slower rate than the page.
-            const canvas = document.getElementById('magic-bg');
-            const ctx = canvas.getContext('2d');
-            const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-            let particles = [], width = 0, height = 0, scrollY = window.scrollY, raf = 0, lastFrame = 0;
-            const pointer = { x: -1000, y: -1000, active: false };
-            function resizeCanvas() {
-                const dpr = Math.min(window.devicePixelRatio || 1, 2);
-                width = window.innerWidth; height = window.innerHeight;
-                canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                const count = Math.max(28, Math.min(75, Math.round(width * height / 16000)));
-                particles = Array.from({ length: count }, (_, i) => ({ x: Math.random() * width, y: Math.random() * height, vx: (Math.random() - .5) * .14, vy: (Math.random() - .5) * .14, size: 2 + Math.floor(Math.random() * 3), phase: Math.random() * 6.28, speed: .12 + Math.random() * .28, hue: i % 5 }));
-                lastFrame = performance.now();
-                drawParticles(performance.now());
-            }
-            function drawParticles(now) {
-                ctx.clearRect(0, 0, width, height);
-                const palette = ['#ffd66e', '#81f2c0', '#83caff', '#ff9ca9', '#c2a5ff'];
-                const delta = Math.min(Math.max((now - lastFrame) / 16.667, .5), 2.5);
-                lastFrame = now;
-                for (const p of particles) {
-                    // A broad, gentle force changes particle velocity rather than teleporting its position.
-                    let repel = 0;
-                    const screenY = p.y - scrollY * .17;
-                    if (pointer.active) {
-                        const dx = p.x - pointer.x, dy = screenY - pointer.y, distance = Math.hypot(dx, dy), radius = 138;
-                        if (distance < radius) {
-                            repel = 1 - distance / radius;
-                            const safeDistance = Math.max(1, distance);
-                            const acceleration = .012 * repel * delta;
-                            p.vx += (dx / safeDistance) * acceleration;
-                            p.vy += (dy / safeDistance) * acceleration;
-                        }
-                    }
-                    // Gentle ambient drift plus friction lets sparks coast, then settle after leaving the pointer.
-                    p.vx += Math.sin(now * .00055 + p.phase) * .0012 * delta;
-                    p.vy += Math.cos(now * .00042 + p.phase) * .001 * delta;
-                    const damping = Math.pow(.984, delta);
-                    p.vx *= damping; p.vy *= damping;
-                    const speed = Math.hypot(p.vx, p.vy), maxSpeed = .72;
-                    if (speed > maxSpeed) { p.vx = p.vx / speed * maxSpeed; p.vy = p.vy / speed * maxSpeed; }
-                    p.x += p.vx * delta; p.y += p.vy * delta;
-                    if (p.x < -8) p.x = width + 8; else if (p.x > width + 8) p.x = -8;
-                    if (p.y - scrollY * .17 < -12) p.y += height + 24; else if (p.y - scrollY * .17 > height + 12) p.y -= height + 24;
-                    const x = p.x + Math.sin(now * .0003 + p.phase) * 3;
-                    const y = p.y - scrollY * .17;
-                    const alpha = .2 + (Math.sin(now * .0015 + p.phase) + 1) * .28;
-                    ctx.globalAlpha = alpha;
-                    if (repel > .01) {
-                        const base = palette[p.hue], r = parseInt(base.slice(1, 3), 16), g = parseInt(base.slice(3, 5), 16), b = parseInt(base.slice(5, 7), 16);
-                        const blend = Math.min(.7, repel * .68), target = [224, 151, 255];
-                        ctx.fillStyle = `rgb(${Math.round(r + (target[0] - r) * blend)} ${Math.round(g + (target[1] - g) * blend)} ${Math.round(b + (target[2] - b) * blend)})`;
-                    } else ctx.fillStyle = palette[p.hue];
-                    ctx.fillRect(Math.round(x), Math.round(y), p.size, p.size);
-                    if (p.size > 3) { ctx.fillRect(Math.round(x - 2), Math.round(y + 1), p.size + 4, 1); ctx.fillRect(Math.round(x + 1), Math.round(y - 2), 1, p.size + 4); }
-                }
-                ctx.globalAlpha = 1;
-            }
-            function animateParticles(now) {
-                raf = 0;
-                if (now - lastFrame > 24) drawParticles(now);
-                if (!reducedMotion.matches) raf = requestAnimationFrame(animateParticles);
-            }
-            function requestParticleDraw() { if (!raf) raf = requestAnimationFrame(animateParticles); }
-            window.addEventListener('scroll', () => { scrollY = window.scrollY; requestParticleDraw(); }, { passive: true });
-            window.addEventListener('pointermove', event => { pointer.x = event.clientX; pointer.y = event.clientY; pointer.active = true; requestParticleDraw(); }, { passive: true });
-            window.addEventListener('pointerleave', () => { pointer.active = false; requestParticleDraw(); }, { passive: true });
-            window.addEventListener('resize', resizeCanvas);
-            reducedMotion.addEventListener?.('change', () => { if (raf) cancelAnimationFrame(raf); raf = 0; if (!reducedMotion.matches) requestParticleDraw(); else drawParticles(performance.now()); });
-            resizeCanvas(); if (!reducedMotion.matches) requestParticleDraw();
+        // Floating pixel magic stays viewport-fixed; cursor motion gently repels nearby particles.
+        const canvas = document.getElementById('magic-bg');
+        const ctx = canvas.getContext('2d');
+        const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+        let particles = [], width = 0, height = 0, raf = 0, lastFrame = 0;
+        const pointer = { x: -1000, y: -1000, active: false };
+        function resizeCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        width = window.innerWidth; height = window.innerHeight;
+        canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const count = Math.max(28, Math.min(75, Math.round(width * height / 16000)));
+        particles = Array.from({ length: count }, (_, i) => ({ x: Math.random() * width, y: Math.random() * height, vx: (Math.random() - .5) * .14, vy: (Math.random() - .5) * .14, size: 2 + Math.floor(Math.random() * 3), phase: Math.random() * 6.28, speed: .12 + Math.random() * .28, hue: i % 5 }));
+        lastFrame = performance.now();
+        drawParticles(performance.now());
+        }
+        function drawParticles(now) {
+        ctx.clearRect(0, 0, width, height);
+        const palette = ['#ffd66e', '#81f2c0', '#83caff', '#ff9ca9', '#c2a5ff'];
+        const delta = Math.min(Math.max((now - lastFrame) / 16.667, .5), 2.5);
+        lastFrame = now;
+        for (const p of particles) {
+        // A broad, gentle force changes particle velocity rather than teleporting its position.
+        let repel = 0;
+        if (pointer.active) {
+        const dx = p.x - pointer.x, dy = p.y - pointer.y, distance = Math.hypot(dx, dy), radius = 138;
+        if (distance < radius) {
+        repel = 1 - distance / radius;
+        const safeDistance = Math.max(1, distance);
+        const acceleration = .012 * repel * delta;
+        p.vx += (dx / safeDistance) * acceleration;
+        p.vy += (dy / safeDistance) * acceleration;
+        }
+        }
+        // Gentle ambient drift plus friction lets sparks coast, then settle after leaving the pointer.
+        p.vx += Math.sin(now * .00055 + p.phase) * .0012 * delta;
+        p.vy += Math.cos(now * .00042 + p.phase) * .001 * delta;
+        const damping = Math.pow(.984, delta);
+        p.vx *= damping; p.vy *= damping;
+        const speed = Math.hypot(p.vx, p.vy), maxSpeed = .72;
+        if (speed > maxSpeed) { p.vx = p.vx / speed * maxSpeed; p.vy = p.vy / speed * maxSpeed; }
+        p.x += p.vx * delta; p.y += p.vy * delta;
+        if (p.x < -8) p.x = width + 8; else if (p.x > width + 8) p.x = -8;
+        if (p.y < -12) p.y += height + 24; else if (p.y > height + 12) p.y -= height + 24;
+        const x = p.x + Math.sin(now * .0003 + p.phase) * 3;
+        const y = p.y;
+        const alpha = .2 + (Math.sin(now * .0015 + p.phase) + 1) * .28;
+        ctx.globalAlpha = alpha;
+        if (repel > .01) {
+        const base = palette[p.hue], r = parseInt(base.slice(1, 3), 16), g = parseInt(base.slice(3, 5), 16), b = parseInt(base.slice(5, 7), 16);
+        const blend = Math.min(.7, repel * .68), target = [224, 151, 255];
+        ctx.fillStyle = `rgb(${Math.round(r + (target[0] - r) * blend)} ${Math.round(g + (target[1] - g) * blend)} ${Math.round(b + (target[2] - b) * blend)})`;
+        } else ctx.fillStyle = palette[p.hue];
+        ctx.fillRect(Math.round(x), Math.round(y), p.size, p.size);
+        if (p.size > 3) { ctx.fillRect(Math.round(x - 2), Math.round(y + 1), p.size + 4, 1); ctx.fillRect(Math.round(x + 1), Math.round(y - 2), 1, p.size + 4); }
+        }
+        ctx.globalAlpha = 1;
+        }
+        function animateParticles(now) {
+        raf = 0;
+        if (now - lastFrame > 24) drawParticles(now);
+        if (!reducedMotion.matches) raf = requestAnimationFrame(animateParticles);
+        }
+        function requestParticleDraw() { if (!raf) raf = requestAnimationFrame(animateParticles); }
+        window.addEventListener('pointermove', event => { pointer.x = event.clientX; pointer.y = event.clientY; pointer.active = true; requestParticleDraw(); }, { passive: true });
+        window.addEventListener('pointerleave', () => { pointer.active = false; requestParticleDraw(); }, { passive: true });
+        window.addEventListener('resize', resizeCanvas);
+        reducedMotion.addEventListener?.('change', () => { if (raf) cancelAnimationFrame(raf); raf = 0; if (!reducedMotion.matches) requestParticleDraw(); else drawParticles(performance.now()); });
+        resizeCanvas(); if (!reducedMotion.matches) requestParticleDraw();
 
-            // The pixel health meter loses one point of HP for each step through the portfolio.
-            const footer = document.querySelector('footer');
-            const healthFill = document.getElementById('health-fill');
-            const healthTrack = document.getElementById('health-track');
-            const hpNumber = document.getElementById('hp-number');
-            function updateHealth() {
-                const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-                const progress = Math.max(0, Math.min(1, window.scrollY / maxScroll));
-                const hp = Math.round((1 - progress) * 100);
-                healthFill.style.width = `${hp}%`;
-                healthTrack.style.setProperty('--health', `${hp}%`);
-                healthTrack.querySelectorAll('.hp-heart,.hp-skull').forEach(marker => marker.style.left = `${hp}%`);
-                healthTrack.setAttribute('aria-valuenow', String(hp));
-                healthTrack.setAttribute('aria-valuetext', `${hp}% health remaining`);
-                hpNumber.textContent = `${hp}%`;
-                document.body.classList.toggle('dead-health', hp === 0);
-            }
-            window.addEventListener('scroll', updateHealth, { passive: true }); window.addEventListener('resize', updateHealth); updateHealth();
+        // The pixel health meter loses one point of HP for each step through the portfolio.
+        const footer = document.querySelector('footer');
+        const healthFill = document.getElementById('health-fill');
+        const healthTrack = document.getElementById('health-track');
+        const hpNumber = document.getElementById('hp-number');
+        function updateHealth() {
+        const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        const progress = Math.max(0, Math.min(1, window.scrollY / maxScroll));
+        const hp = Math.round((1 - progress) * 100);
+        healthFill.style.width = `${hp}%`;
+        healthTrack.style.setProperty('--health', `${hp}%`);
+        healthTrack.querySelectorAll('.hp-heart,.hp-skull').forEach(marker => marker.style.left = `${hp}%`);
+        healthTrack.setAttribute('aria-valuenow', String(hp));
+        healthTrack.setAttribute('aria-valuetext', `${hp}% health remaining`);
+        hpNumber.textContent = `${hp}%`;
+        document.body.classList.toggle('dead-health', hp === 0);
+        }
+        window.addEventListener('scroll', updateHealth, { passive: true }); window.addEventListener('resize', updateHealth); updateHealth();
 
-            // Responsive sticky navigation / hamburger.
-            const toggle = document.getElementById('menu-toggle'), nav = document.getElementById('site-nav');
-            function closeNav() { toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Open navigation menu'); nav.classList.remove('open'); }
-            toggle.addEventListener('click', () => { const opening = toggle.getAttribute('aria-expanded') !== 'true'; toggle.setAttribute('aria-expanded', String(opening)); toggle.setAttribute('aria-label', opening ? 'Close navigation menu' : 'Open navigation menu'); nav.classList.toggle('open', opening); });
-            const navLinks = [...nav.querySelectorAll('a')];
-            navLinks.forEach(link => link.addEventListener('click', closeNav));
-            const trackedSections = ['top', 'projects', 'skills', 'contact'].map(id => document.getElementById(id)).filter(Boolean);
-            let activeSectionFrame = 0;
-            function updateActiveSection() {
-                activeSectionFrame = 0;
-                const headerBottom = document.querySelector('.topbar').getBoundingClientRect().bottom;
-                const readingLine = headerBottom + Math.min(180, Math.max(105, (window.innerHeight - headerBottom) * .32));
-                let current = trackedSections[0], nearestDistance = Infinity;
-                for (const section of trackedSections) {
-                    const rect = section.getBoundingClientRect();
-                    if (rect.top <= readingLine && rect.bottom > readingLine) { current = section; nearestDistance = 0; break; }
-                    const distance = rect.top > readingLine ? rect.top - readingLine : readingLine - rect.bottom;
-                    if (distance < nearestDistance) { nearestDistance = distance; current = section; }
-                }
-                if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) current = trackedSections.at(-1);
-                navLinks.forEach(link => {
-                    if (link.getAttribute('href') === `#${current.id}`) link.setAttribute('aria-current', 'location');
-                    else link.removeAttribute('aria-current');
-                });
-            }
-            function scheduleActiveSection() { if (!activeSectionFrame) activeSectionFrame = requestAnimationFrame(updateActiveSection); }
-            window.addEventListener('scroll', scheduleActiveSection, { passive: true });
-            window.addEventListener('resize', scheduleActiveSection);
-            scheduleActiveSection();
-            document.addEventListener('click', event => { if (!event.target.closest('.topbar-inner')) closeNav(); });
-            document.addEventListener('keydown', event => { if (event.key === 'Escape') closeNav(); });
+        // Responsive sticky navigation / hamburger.
+        const toggle = document.getElementById('menu-toggle'), nav = document.getElementById('site-nav');
+        function closeNav() { toggle.setAttribute('aria-expanded', 'false'); toggle.setAttribute('aria-label', 'Open navigation menu'); nav.classList.remove('open'); }
+        toggle.addEventListener('click', () => { const opening = toggle.getAttribute('aria-expanded') !== 'true'; toggle.setAttribute('aria-expanded', String(opening)); toggle.setAttribute('aria-label', opening ? 'Close navigation menu' : 'Open navigation menu'); nav.classList.toggle('open', opening); });
+        const navLinks = [...nav.querySelectorAll('a')];
+        navLinks.forEach(link => link.addEventListener('click', closeNav));
+        const trackedSections = ['top', 'projects', 'skills', 'contact'].map(id => document.getElementById(id)).filter(Boolean);
+        let activeSectionFrame = 0;
+        function updateActiveSection() {
+        activeSectionFrame = 0;
+        const headerBottom = document.querySelector('.topbar').getBoundingClientRect().bottom;
+        const readingLine = headerBottom + Math.min(180, Math.max(105, (window.innerHeight - headerBottom) * .32));
+        let current = trackedSections[0], nearestDistance = Infinity;
+        for (const section of trackedSections) {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= readingLine && rect.bottom > readingLine) { current = section; nearestDistance = 0; break; }
+        const distance = rect.top > readingLine ? rect.top - readingLine : readingLine - rect.bottom;
+        if (distance < nearestDistance) { nearestDistance = distance; current = section; }
+        }
+        if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) current = trackedSections.at(-1);
+        navLinks.forEach(link => {
+        if (link.getAttribute('href') === `#${current.id}`) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+        });
+        }
+        function scheduleActiveSection() { if (!activeSectionFrame) activeSectionFrame = requestAnimationFrame(updateActiveSection); }
+        window.addEventListener('scroll', scheduleActiveSection, { passive: true });
+        window.addEventListener('resize', scheduleActiveSection);
+        scheduleActiveSection();
+        document.addEventListener('click', event => { if (!event.target.closest('.topbar-inner')) closeNav(); });
+        document.addEventListener('keydown', event => { if (event.key === 'Escape') closeNav(); });
 
-            // Shared animated modal behavior, keyboard focus return, and focus trap.
-            function createModalController(modal, closeSelector, onClose = () => { }) {
-                const panel = modal.querySelector('[role="dialog"]');
-                const close = modal.querySelector(closeSelector);
-                let previousFocus = null, closingTimer = 0;
-                function open(from = document.activeElement) {
-                    clearTimeout(closingTimer); previousFocus = from;
-                    modal.classList.remove('closing'); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false');
-                    document.body.style.overflow = 'hidden'; close.focus();
-                }
-                function shut() {
-                    if (!modal.classList.contains('open')) return;
-                    modal.classList.remove('open'); modal.classList.add('closing'); modal.setAttribute('aria-hidden', 'true');
-                    clearTimeout(closingTimer); closingTimer = setTimeout(() => { modal.classList.remove('closing'); document.body.style.overflow = ''; (previousFocus?.isConnected ? previousFocus : null)?.focus({ preventScroll: true }); onClose(); }, 260);
-                }
-                close.addEventListener('click', shut);
-                modal.addEventListener('click', event => { if (event.target === modal) shut(); });
-                modal.addEventListener('keydown', event => {
-                    if (event.key === 'Escape') { event.preventDefault(); shut(); return; }
-                    if (event.key === 'Tab') {
-                        const focusable = [...panel.querySelectorAll('a[href],button:not([disabled]):not([hidden])')].filter(el => el.getClientRects().length);
-                        if (!focusable.length) return;
-                        const first = focusable[0], last = focusable[focusable.length - 1];
-                        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-                        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-                    }
-                });
-                return { open, close: shut, get isOpen() { return modal.classList.contains('open'); } };
-            }
+        // Shared animated modal behavior, keyboard focus return, and focus trap.
+        function createModalController(modal, closeSelector, onClose = () => { }, { dismissOnBackdrop = true, dismissOnEscape = true } = {}) {
+        const panel = modal.querySelector('[role="dialog"]');
+        const close = modal.querySelector(closeSelector);
+        let previousFocus = null, closingTimer = 0;
+        function open(from = document.activeElement) {
+        clearTimeout(closingTimer); previousFocus = from;
+        modal.classList.remove('closing'); modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden'; close.focus();
+        }
+        function shut() {
+        if (!modal.classList.contains('open')) return;
+        modal.classList.remove('open'); modal.classList.add('closing'); modal.setAttribute('aria-hidden', 'true');
+        clearTimeout(closingTimer); closingTimer = setTimeout(() => { modal.classList.remove('closing'); document.body.style.overflow = ''; (previousFocus?.isConnected ? previousFocus : null)?.focus({ preventScroll: true }); onClose(); }, 260);
+        }
+        close.addEventListener('click', shut);
+        modal.addEventListener('click', event => { if (dismissOnBackdrop && event.target === modal) shut(); });
+        modal.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+        if (dismissOnEscape) shut();
+        event.preventDefault();
+        if (!dismissOnEscape) event.stopPropagation();
+        return;
+        }
+        if (event.key === 'Tab') {
+        const focusable = [...panel.querySelectorAll('a[href],button:not([disabled]):not([hidden])')].filter(el => el.getClientRects().length);
+        if (!focusable.length) return;
+        const first = focusable[0], last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+        });
+        return { open, close: shut, get isOpen() { return modal.classList.contains('open'); } };
+        }
 
-            // Project details use data-driven slides: every project may have its own carousel length.
-            const projectModal = document.getElementById('project-modal');
-            const projectController = createModalController(projectModal, '[data-close-project]');
-            const modalCover = document.getElementById('modal-cover-image');
-            const carouselImage = document.getElementById('carousel-image');
-            const carouselTitle = document.getElementById('carousel-title');
-            const carouselDescription = document.getElementById('carousel-description');
-            const carouselCount = document.getElementById('carousel-count');
-            const dots = document.getElementById('carousel-dots');
-            let activeProject = null, slideIndex = 0;
-            function renderSlide(index, animate = true) {
-                if (!activeProject) return;
-                const slides = activeProject.slides; slideIndex = (index + slides.length) % slides.length;
-                const slide = slides[slideIndex];
-                const update = () => {
-                    carouselImage.src = artData(activeProject, slide.title, slideIndex + 1);
-                    carouselImage.alt = `${activeProject.title}: ${slide.title}. ${slide.caption}`;
-                    carouselTitle.textContent = slide.title; carouselDescription.textContent = slide.caption;
-                    carouselCount.textContent = `${String(slideIndex + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
-                    [...dots.children].forEach((dot, i) => dot.setAttribute('aria-current', String(i === slideIndex)));
-                    carouselImage.classList.remove('changing');
-                };
-                if (animate) { carouselImage.classList.add('changing'); setTimeout(update, 100); } else update();
-            }
-            function openProject(project, from) {
-                activeProject = project; slideIndex = 0;
-                document.getElementById('modal-project-kicker').textContent = `FIELD NOTES · ${project.category.toUpperCase()}`;
-                document.getElementById('modal-project-category').textContent = `${project.category} · ${project.year}`;
-                document.getElementById('modal-project-title').textContent = project.title;
-                document.getElementById('modal-project-copy').textContent = project.description;
-                modalCover.src = artData(project, project.title); modalCover.alt = `Enlarged pixel-art thumbnail for ${project.title}`;
-                const stack = document.getElementById('modal-stack'); stack.replaceChildren(...project.stack.map(label => { const tag = document.createElement('span'); tag.textContent = label; return tag; }));
-                const projectLink = document.getElementById('modal-project-link'); projectLink.href = project.link;
-                dots.replaceChildren(...project.slides.map((slide, index) => { const dot = document.createElement('button'); dot.type = 'button'; dot.className = 'carousel-dot'; dot.setAttribute('aria-label', `Show image ${index + 1}: ${slide.title}`); dot.setAttribute('aria-current', String(index === 0)); dot.addEventListener('click', () => renderSlide(index)); return dot; }));
-                renderSlide(0, false); projectController.open(from);
-            }
-            grid.addEventListener('click', event => { const card = event.target.closest('[data-project]'); if (card) { const project = projects.find(item => item.id === card.dataset.project); if (project) openProject(project, card); } });
-            document.getElementById('carousel-prev').addEventListener('click', () => renderSlide(slideIndex - 1));
-            document.getElementById('carousel-next').addEventListener('click', () => renderSlide(slideIndex + 1));
-            carouselImage.addEventListener('load', () => carouselImage.classList.remove('changing'));
+        // Project details use data-driven slides: every project may have its own carousel length.
+        const projectModal = document.getElementById('project-modal');
+        const projectController = createModalController(projectModal, '[data-close-project]');
+        const modalCover = document.getElementById('modal-cover-image');
+        const carouselImage = document.getElementById('carousel-image');
+        const carouselTitle = document.getElementById('carousel-title');
+        const carouselDescription = document.getElementById('carousel-description');
+        const carouselCount = document.getElementById('carousel-count');
+        const dots = document.getElementById('carousel-dots');
+        const carouselPrevImage = document.getElementById('carousel-prev-image');
+        const carouselNextImage = document.getElementById('carousel-next-image');
+        const slideView = document.getElementById('slide-view');
+        let activeProject = null, slideIndex = 0, slideUpdateTimer = 0, swipeStart = null;
+        function renderSlide(index, animate = true) {
+        if (!activeProject) return;
+        const slides = activeProject.slides;
+        slideIndex = (index + slides.length) % slides.length;
+        const current = slides[slideIndex];
+        const previousIndex = (slideIndex - 1 + slides.length) % slides.length;
+        const nextIndex = (slideIndex + 1) % slides.length;
+        const previous = slides[previousIndex], next = slides[nextIndex];
+        const update = () => {
+        carouselPrevImage.src = artData(activeProject, previous.title, previousIndex + 1);
+        carouselNextImage.src = artData(activeProject, next.title, nextIndex + 1);
+        carouselImage.src = artData(activeProject, current.title, slideIndex + 1);
+        carouselImage.alt = `${activeProject.title}: ${current.title}. ${current.caption}`;
+        carouselTitle.textContent = current.title; carouselDescription.textContent = current.caption;
+        carouselCount.textContent = `${String(slideIndex + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+        [...dots.children].forEach((dot, i) => dot.setAttribute('aria-current', String(i === slideIndex)));
+        carouselImage.classList.remove('changing');
+        };
+        clearTimeout(slideUpdateTimer);
+        if (animate) { carouselImage.classList.add('changing'); slideUpdateTimer = setTimeout(update, 100); } else update();
+        }
+        slideView.addEventListener('pointerdown', event => {
+        if (event.pointerType === 'mouse' && event.button !== 0) return;
+        swipeStart = { x: event.clientX, y: event.clientY, pointerId: event.pointerId };
+        if (event.pointerType !== 'touch') slideView.setPointerCapture?.(event.pointerId);
+        });
+        slideView.addEventListener('pointerup', event => {
+        if (!swipeStart || swipeStart.pointerId !== event.pointerId) return;
+        const deltaX = event.clientX - swipeStart.x;
+        const deltaY = event.clientY - swipeStart.y;
+        swipeStart = null;
+        if (Math.abs(deltaX) >= 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) renderSlide(slideIndex + (deltaX < 0 ? 1 : -1));
+        });
+        slideView.addEventListener('pointercancel', () => { swipeStart = null; });
+        slideView.addEventListener('lostpointercapture', () => { swipeStart = null; });
+        function openProject(project, from) {
+        activeProject = project; slideIndex = 0;
+        document.getElementById('modal-project-kicker').textContent = `FIELD NOTES · ${project.category.toUpperCase()}`;
+        document.getElementById('modal-project-category').textContent = `${project.category} · ${project.year}`;
+        document.getElementById('modal-project-title').textContent = project.title;
+        document.getElementById('modal-project-copy').textContent = project.description;
+        modalCover.src = artData(project, project.title); modalCover.alt = `Enlarged pixel-art thumbnail for ${project.title}`;
+        const stack = document.getElementById('modal-stack'); stack.replaceChildren(...project.stack.map(label => { const tag = document.createElement('span'); tag.textContent = label; return tag; }));
+        const projectLink = document.getElementById('modal-project-link'); projectLink.href = project.link;
+        dots.replaceChildren(...project.slides.map((slide, index) => { const dot = document.createElement('button'); dot.type = 'button'; dot.className = 'carousel-dot'; dot.setAttribute('aria-label', `Show image ${index + 1}: ${slide.title}`); dot.setAttribute('aria-current', String(index === 0)); dot.addEventListener('click', () => renderSlide(index)); return dot; }));
+        renderSlide(0, false); projectController.open(from);
+        }
+        grid.addEventListener('click', event => { const card = event.target.closest('[data-project]'); if (card) { const project = projects.find(item => item.id === card.dataset.project); if (project) openProject(project, card); } });
+        document.getElementById('carousel-prev').addEventListener('click', () => renderSlide(slideIndex - 1));
+        document.getElementById('carousel-next').addEventListener('click', () => renderSlide(slideIndex + 1));
+        carouselImage.addEventListener('load', () => carouselImage.classList.remove('changing'));
 
-            // Flat top-down skill overworld: four-direction walking, no jumping or gravity.
-            const level = document.getElementById('overworld'), goblin = document.getElementById('goblin');
-            const gameStatus = document.getElementById('game-status'), xpLabel = document.getElementById('skill-xp');
-            const locations = [...level.querySelectorAll('.skill-location')];
-            const skillInfo = {
-                cpp: { kicker: 'TAVERN · SYSTEMS CRAFT', title: 'C++ · The Starlit Tavern', copy: 'A sturdy corner for performance-minded problem solving, lower-level concepts, and the joy of making every byte count.', items: ['Modern C++ foundations and object-oriented design', 'Memory, data structures, and debugging fundamentals', 'Building small, fast, maintainable tools'], xp: 18 },
-                python: { kicker: 'CAVE · AUTOMATION LAB', title: 'Python · The Curious Cave', copy: 'A quiet workshop for scripts, APIs, data wrangling, and turning a tedious process into a one-command ritual.', items: ['Python scripting, automation, and clean modules', 'REST APIs and server-side application patterns', 'Data processing, tests, and practical tooling'], xp: 22 },
-                web: { kicker: 'GREENHOUSE · FRONT-END', title: 'HTML & CSS · The Web Garden', copy: 'A living space for clear structure, responsive layouts, accessible interfaces, and just the right amount of visual magic.', items: ['Semantic HTML and accessible interaction patterns', 'Responsive CSS, design systems, and motion', 'Performance-minded, cross-device implementation'], xp: 20 },
-                javascript: { kicker: 'TOWER · INTERACTION MAGIC', title: 'JavaScript · The Signal Tower', copy: 'A high lookout for building lively interfaces and dependable product behavior, from small interactions to full-stack features.', items: ['Modern JavaScript and component-based UI', 'Async workflows, browser APIs, and state', 'Interactive prototypes and thoughtful UX details'], xp: 24 },
-                tools: { kicker: 'FORGE · TEAMWORK GUILD', title: 'Git & workflow · The Forge', copy: 'A place to shape reliable releases, make changes legible, and work well with the humans on the other side of the code.', items: ['Git, code review, and collaborative workflows', 'Testing, CI habits, and iterative delivery', 'Clear documentation and maintainable handoffs'], xp: 16 }
-            };
-            const skillModal = document.getElementById('skill-modal');
-            const skillController = createModalController(skillModal, '[data-close-skill]', () => {
-                if (skillState.active) skillState.ignore = skillState.active;
-                skillState.active = null; gameStatus.textContent = 'Back in the overworld. Keep exploring!';
-            });
-            const skillDirections = new Set();
-            const skillState = { x: 0, y: 0, active: null, ignore: null, xp: 0, last: 0, frame: 0 };
-            function placeGoblin() {
-                const bounds = level.getBoundingClientRect(); if (!bounds.width || !bounds.height) return;
-                if (!skillState.x) skillState.x = bounds.width * .5;
-                if (!skillState.y) skillState.y = bounds.height * .78;
-                const halfW = goblin.offsetWidth * .5, halfH = goblin.offsetHeight * .5;
-                skillState.x = Math.max(halfW, Math.min(bounds.width - halfW, skillState.x));
-                skillState.y = Math.max(49 + halfH, Math.min(bounds.height - halfH, skillState.y));
-                goblin.style.left = `${skillState.x}px`; goblin.style.top = `${skillState.y}px`;
-            }
-            function showSkill(id) {
-                const data = skillInfo[id]; if (!data || skillController.isOpen) return;
-                skillState.active = id; skillDirections.clear(); cancelAnimationFrame(skillState.frame); skillState.frame = 0; goblin.classList.remove('walking');
-                document.getElementById('skill-dialog-kicker').textContent = data.kicker;
-                document.getElementById('skill-dialog-title').textContent = data.title;
-                document.getElementById('skill-dialog-copy').textContent = data.copy;
-                document.getElementById('skill-dialog-list').replaceChildren(...data.items.map(text => { const li = document.createElement('li'); li.textContent = text; return li; }));
-                const status = document.getElementById('skill-dialog-status');
-                const landmark = locations.find(item => item.dataset.skill === id);
-                if (!landmark.dataset.discovered) { landmark.dataset.discovered = 'true'; skillState.xp += data.xp; xpLabel.textContent = String(skillState.xp).padStart(3, '0'); status.textContent = `SKILL LOGGED · +${data.xp} XP`; }
-                else status.textContent = 'Already in your skill log. Have another look around!';
-                skillController.open(level); gameStatus.textContent = `${data.title} discovered. Close the card to keep exploring.`;
-            }
-            function overlapCheck() {
-                const playerRect = goblin.getBoundingClientRect();
-                const found = locations.find(location => { const rect = location.getBoundingClientRect(); return playerRect.left < rect.right && playerRect.right > rect.left && playerRect.top < rect.bottom && playerRect.bottom > rect.top; });
-                if (found) { if (skillState.active !== found.dataset.skill && skillState.ignore !== found.dataset.skill) showSkill(found.dataset.skill); }
-                else { skillState.active = null; skillState.ignore = null; }
-            }
-            function runOverworld(now) {
-                skillState.frame = 0; if (skillController.isOpen || !skillDirections.size) return;
-                const delta = Math.min((now - skillState.last) / 16.667 || 1, 2); skillState.last = now;
-                const bounds = level.getBoundingClientRect();
-                const dx = Number(skillDirections.has('right')) - Number(skillDirections.has('left'));
-                const dy = Number(skillDirections.has('down')) - Number(skillDirections.has('up'));
-                const length = Math.hypot(dx, dy) || 1;
-                const step = 3.4 * delta;
-                const halfW = goblin.offsetWidth * .5, halfH = goblin.offsetHeight * .5;
-                skillState.x = Math.max(halfW, Math.min(bounds.width - halfW, skillState.x + (dx / length) * step));
-                skillState.y = Math.max(49 + halfH, Math.min(bounds.height - halfH, skillState.y + (dy / length) * step));
-                goblin.style.left = `${skillState.x}px`; goblin.style.top = `${skillState.y}px`;
-                goblin.classList.toggle('facing-left', dx < 0); goblin.classList.toggle('walking', dx !== 0 || dy !== 0);
-                overlapCheck();
-                if (skillDirections.size && !skillController.isOpen) skillState.frame = requestAnimationFrame(runOverworld);
-                else goblin.classList.remove('walking');
-            }
-            function startOverworld() { if (!skillState.frame && !skillController.isOpen) { skillState.last = performance.now(); skillState.frame = requestAnimationFrame(runOverworld); } }
-            function stopOverworld() { skillDirections.clear(); cancelAnimationFrame(skillState.frame); skillState.frame = 0; goblin.classList.remove('walking'); }
-            function setDirection(direction, pressed) {
-                if (pressed) { skillDirections.add(direction); startOverworld(); }
-                else { skillDirections.delete(direction); if (!skillDirections.size) { cancelAnimationFrame(skillState.frame); skillState.frame = 0; goblin.classList.remove('walking'); } }
-            }
-            const moveKeys = { ArrowLeft: 'left', a: 'left', A: 'left', ArrowRight: 'right', d: 'right', D: 'right', ArrowUp: 'up', w: 'up', W: 'up', ArrowDown: 'down', s: 'down', S: 'down' };
-            document.addEventListener('keydown', event => {
-                if (skillController.isOpen) return;
-                const focusedControl = event.target.closest?.('input,textarea,select,[contenteditable="true"],a,button');
-                if (focusedControl && !level.contains(focusedControl)) return;
-                const direction = moveKeys[event.key];
-                if (direction) { event.preventDefault(); setDirection(direction, true); }
-            });
-            document.addEventListener('keyup', event => { const direction = moveKeys[event.key]; if (direction) setDirection(direction, false); });
-            window.addEventListener('blur', stopOverworld);
-            window.addEventListener('resize', () => { placeGoblin(); overlapCheck(); });
-            level.addEventListener('pointerdown', event => { if (event.target === level || event.target.closest('.overworld-path,.water-pool,.overworld-bush')) level.focus({ preventScroll: true }); });
-            locations.forEach(location => location.addEventListener('click', () => { level.focus({ preventScroll: true }); showSkill(location.dataset.skill); }));
-            document.querySelectorAll('.mobile-controls button').forEach(button => {
-                const direction = button.dataset.control;
-                button.addEventListener('pointerdown', event => { event.preventDefault(); level.focus({ preventScroll: true }); setDirection(direction, true); });
-                button.addEventListener('pointerup', () => setDirection(direction, false)); button.addEventListener('pointerleave', () => setDirection(direction, false)); button.addEventListener('pointercancel', () => setDirection(direction, false));
-            });
-            placeGoblin();
+        // Flat top-down skill overworld: four-direction walking, no jumping or gravity.
+        const level = document.getElementById('overworld'), goblin = document.getElementById('goblin');
+        const gameStatus = document.getElementById('game-status'), xpLabel = document.getElementById('skill-xp');
+        const locations = [...level.querySelectorAll('.skill-location')];
+        const skillInfo = {
+        cpp: { kicker: 'TAVERN · SYSTEMS CRAFT', title: 'C++ · The Starlit Tavern', copy: 'A sturdy corner for performance-minded problem solving, lower-level concepts, and the joy of making every byte count.', items: ['Modern C++ foundations and object-oriented design', 'Memory, data structures, and debugging fundamentals', 'Building small, fast, maintainable tools'], xp: 18 },
+        python: { kicker: 'CAVE · AUTOMATION LAB', title: 'Python · The Curious Cave', copy: 'A quiet workshop for scripts, APIs, data wrangling, and turning a tedious process into a one-command ritual.', items: ['Python scripting, automation, and clean modules', 'REST APIs and server-side application patterns', 'Data processing, tests, and practical tooling'], xp: 22 },
+        web: { kicker: 'GREENHOUSE · FRONT-END', title: 'HTML & CSS · The Web Garden', copy: 'A living space for clear structure, responsive layouts, accessible interfaces, and just the right amount of visual magic.', items: ['Semantic HTML and accessible interaction patterns', 'Responsive CSS, design systems, and motion', 'Performance-minded, cross-device implementation'], xp: 20 },
+        javascript: { kicker: 'TOWER · INTERACTION MAGIC', title: 'JavaScript · The Signal Tower', copy: 'A high lookout for building lively interfaces and dependable product behavior, from small interactions to full-stack features.', items: ['Modern JavaScript and component-based UI', 'Async workflows, browser APIs, and state', 'Interactive prototypes and thoughtful UX details'], xp: 24 },
+        tools: { kicker: 'FORGE · TEAMWORK GUILD', title: 'Git & workflow · The Forge', copy: 'A place to shape reliable releases, make changes legible, and work well with the humans on the other side of the code.', items: ['Git, code review, and collaborative workflows', 'Testing, CI habits, and iterative delivery', 'Clear documentation and maintainable handoffs'], xp: 16 }
+        };
+        const skillModal = document.getElementById('skill-modal');
+        const skillController = createModalController(skillModal, '[data-close-skill]', () => {
+        if (skillState.active) skillState.ignore = skillState.active;
+        skillState.active = null; gameStatus.textContent = 'Back in the overworld. Keep exploring!';
+        }, { dismissOnBackdrop: false, dismissOnEscape: false });
+        const skillDirections = new Set();
+        const skillState = { x: 0, y: 0, active: null, ignore: null, xp: 0, last: 0, frame: 0 };
+        function placeGoblin() {
+        const bounds = level.getBoundingClientRect(); if (!bounds.width || !bounds.height) return;
+        if (!skillState.x) skillState.x = bounds.width * .5;
+        if (!skillState.y) skillState.y = bounds.height * .78;
+        const halfW = goblin.offsetWidth * .5, halfH = goblin.offsetHeight * .5;
+        skillState.x = Math.max(halfW, Math.min(bounds.width - halfW, skillState.x));
+        skillState.y = Math.max(49 + halfH, Math.min(bounds.height - halfH, skillState.y));
+        goblin.style.left = `${skillState.x}px`; goblin.style.top = `${skillState.y}px`;
+        }
+        function showSkill(id) {
+        const data = skillInfo[id]; if (!data || skillController.isOpen) return;
+        skillState.active = id; skillDirections.clear(); cancelAnimationFrame(skillState.frame); skillState.frame = 0; goblin.classList.remove('walking');
+        document.getElementById('skill-dialog-kicker').textContent = data.kicker;
+        document.getElementById('skill-dialog-title').textContent = data.title;
+        document.getElementById('skill-dialog-copy').textContent = data.copy;
+        document.getElementById('skill-dialog-list').replaceChildren(...data.items.map(text => { const li = document.createElement('li'); li.textContent = text; return li; }));
+        const status = document.getElementById('skill-dialog-status');
+        const landmark = locations.find(item => item.dataset.skill === id);
+        if (!landmark.dataset.discovered) { landmark.dataset.discovered = 'true'; skillState.xp += data.xp; xpLabel.textContent = String(skillState.xp).padStart(3, '0'); status.textContent = `SKILL LOGGED · +${data.xp} XP`; }
+        else status.textContent = 'Already in your skill log. Have another look around!';
+        skillController.open(level); gameStatus.textContent = `${data.title} discovered. Close the card to keep exploring.`;
+        }
+        function overlapCheck() {
+        const playerRect = goblin.getBoundingClientRect();
+        const found = locations.find(location => { const rect = location.getBoundingClientRect(); return playerRect.left < rect.right && playerRect.right > rect.left && playerRect.top < rect.bottom && playerRect.bottom > rect.top; });
+        if (found) { if (skillState.active !== found.dataset.skill && skillState.ignore !== found.dataset.skill) showSkill(found.dataset.skill); }
+        else { skillState.active = null; skillState.ignore = null; }
+        }
+        function runOverworld(now) {
+        skillState.frame = 0; if (skillController.isOpen || !skillDirections.size) return;
+        const delta = Math.min((now - skillState.last) / 16.667 || 1, 2); skillState.last = now;
+        const bounds = level.getBoundingClientRect();
+        const dx = Number(skillDirections.has('right')) - Number(skillDirections.has('left'));
+        const dy = Number(skillDirections.has('down')) - Number(skillDirections.has('up'));
+        const length = Math.hypot(dx, dy) || 1;
+        const step = 3.4 * delta;
+        const halfW = goblin.offsetWidth * .5, halfH = goblin.offsetHeight * .5;
+        skillState.x = Math.max(halfW, Math.min(bounds.width - halfW, skillState.x + (dx / length) * step));
+        skillState.y = Math.max(49 + halfH, Math.min(bounds.height - halfH, skillState.y + (dy / length) * step));
+        goblin.style.left = `${skillState.x}px`; goblin.style.top = `${skillState.y}px`;
+        goblin.classList.toggle('facing-left', dx < 0); goblin.classList.toggle('walking', dx !== 0 || dy !== 0);
+        overlapCheck();
+        if (skillDirections.size && !skillController.isOpen) skillState.frame = requestAnimationFrame(runOverworld);
+        else goblin.classList.remove('walking');
+        }
+        function startOverworld() { if (!skillState.frame && !skillController.isOpen) { skillState.last = performance.now(); skillState.frame = requestAnimationFrame(runOverworld); } }
+        function stopOverworld() { skillDirections.clear(); cancelAnimationFrame(skillState.frame); skillState.frame = 0; goblin.classList.remove('walking'); }
+        function setDirection(direction, pressed) {
+        if (pressed) { skillDirections.add(direction); startOverworld(); }
+        else { skillDirections.delete(direction); if (!skillDirections.size) { cancelAnimationFrame(skillState.frame); skillState.frame = 0; goblin.classList.remove('walking'); } }
+        }
+        const moveKeys = { ArrowLeft: 'left', a: 'left', A: 'left', ArrowRight: 'right', d: 'right', D: 'right', ArrowUp: 'up', w: 'up', W: 'up', ArrowDown: 'down', s: 'down', S: 'down' };
+        document.addEventListener('keydown', event => {
+        if (skillController.isOpen) return;
+        const focusedControl = event.target.closest?.('input,textarea,select,[contenteditable="true"],a,button');
+        if (focusedControl && !level.contains(focusedControl)) return;
+        const direction = moveKeys[event.key];
+        if (direction) { event.preventDefault(); setDirection(direction, true); }
+        });
+        document.addEventListener('keyup', event => { const direction = moveKeys[event.key]; if (direction) setDirection(direction, false); });
+        window.addEventListener('blur', stopOverworld);
+        window.addEventListener('resize', () => { placeGoblin(); overlapCheck(); });
+        level.addEventListener('pointerdown', event => { if (event.target === level || event.target.closest('.overworld-path,.water-pool,.overworld-bush')) level.focus({ preventScroll: true }); });
+        locations.forEach(location => location.addEventListener('click', () => { level.focus({ preventScroll: true }); showSkill(location.dataset.skill); }));
+        document.querySelectorAll('.mobile-controls button').forEach(button => {
+        const direction = button.dataset.control;
+        button.addEventListener('pointerdown', event => { event.preventDefault(); level.focus({ preventScroll: true }); setDirection(direction, true); });
+        button.addEventListener('pointerup', () => setDirection(direction, false)); button.addEventListener('pointerleave', () => setDirection(direction, false)); button.addEventListener('pointercancel', () => setDirection(direction, false));
+        });
+        placeGoblin();
         })();
     </script>
 </body>
